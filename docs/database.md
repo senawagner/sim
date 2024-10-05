@@ -1,79 +1,47 @@
-# Documentação do Banco de Dados
+# DocumentaÃ§Ã£o do Banco de Dados
 
-## Tabela: usuarios
+## InformaÃ§Ãµes Gerais
 
-### Estrutura
+    Laravel\Prompts\Exceptions\NonInteractiveValidationException     Required.    at vendor/laravel/prompts/src/Concerns/Interactivity.php:32      28Ôûò       29Ôûò         $this->validate($default);      30Ôûò       31Ôûò         if ($this->state === 'error') {   Ô×£  32Ôûò             throw new NonInteractiveValidationException($this->error);      33Ôûò         }      34Ôûò       35Ôûò         return $default;      36Ôûò     }        [2m+15 vendor frames [22m    16  artisan:37       Illuminate\Foundation\Console\Kernel::handle(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput)) 
 
+## Estrutura das Tabelas
 
+### Tabela: usuarios
 
+```    ERROR  Command "db:table usuarios" is not defined. Did you mean one of these?      Ôçé db     Ôçé db:monitor     Ôçé db:seed     Ôçé db:show     Ôçé db:table     Ôçé db:wipe   ```
 
-sql
-CREATE TABLE usuarios (
-id int(11) NOT NULL AUTO_INCREMENT,
-username varchar(50) NOT NULL,
-password varchar(255) NOT NULL,
-nome varchar(100) NOT NULL,
-email varchar(100) NOT NULL,
-perfil enum('admin','usuario') NOT NULL DEFAULT 'usuario',
-is_admin tinyint(1) NOT NULL DEFAULT 0,
-created_at timestamp NOT NULL DEFAULT current_timestamp(),
-PRIMARY KEY (id),
-UNIQUE KEY username (username),
-UNIQUE KEY email (email)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+### Tabela: empresas
 
+```    ERROR  Command "db:table empresas" is not defined. Did you mean one of these?      Ôçé db     Ôçé db:monitor     Ôçé db:seed     Ôçé db:show     Ôçé db:table     Ôçé db:wipe   ```
 
+### Tabela: filiais
 
+```    ERROR  Command "db:table filiais" is not defined. Did you mean one of these?      Ôçé db     Ôçé db:monitor     Ôçé db:seed     Ôçé db:show     Ôçé db:table     Ôçé db:wipe   ```
 
-### Colunas
-| Coluna     | Tipo                    | Nulo | Chave | Padrão            | Extra          |
-|------------|-------------------------|------|-------|-------------------|----------------|
-| id         | int(11)                 | NO   | PRI   | NULL              | auto_increment |
-| username   | varchar(50)             | NO   | UNI   | NULL              |                |
-| password   | varchar(255)            | NO   |       | NULL              |                |
-| nome       | varchar(100)            | NO   |       | NULL              |                |
-| email      | varchar(100)            | NO   | UNI   | NULL              |                |
-| perfil     | enum('admin','usuario') | NO   |       | 'usuario'         |                |
-| is_admin   | tinyint(1)              | NO   |       | 0                 |                |
-| created_at | timestamp               | NO   |       | current_timestamp |                |
+### Tabela: equipamentos
 
-### Chaves Estrangeiras
-Nenhuma chave estrangeira nesta tabela.
+```    ERROR  Command "db:table equipamentos" is not defined. Did you mean one of these?      Ôçé db     Ôçé db:monitor     Ôçé db:seed     Ôçé db:show     Ôçé db:table     Ôçé db:wipe   ```
 
-## Tabela: filiais
+### Tabela: manutencoes
 
-### Estrutura
+```    ERROR  Command "db:table manutencoes" is not defined. Did you mean one of these?      Ôçé db     Ôçé db:monitor     Ôçé db:seed     Ôçé db:show     Ôçé db:table     Ôçé db:wipe   ```
 
+### Tabela: tecnicos
 
+```    ERROR  Command "db:table tecnicos" is not defined. Did you mean one of these?      Ôçé db     Ôçé db:monitor     Ôçé db:seed     Ôçé db:show     Ôçé db:table     Ôçé db:wipe   ```
 
-### Colunas
-| Coluna     | Tipo                    | Nulo | Chave | Padrão            | Extra          |
-|------------|-------------------------|------|-------|-------------------|----------------|
-| id         | int(11)                 | NO   | PRI   | NULL              | auto_increment |
-| username   | varchar(50)             | NO   | UNI   | NULL              |                |
-| password   | varchar(255)            | NO   |       | NULL              |                |
-| nome       | varchar(100)            | NO   |       | NULL              |                |
-| email      | varchar(100)            | NO   | UNI   | NULL              |                |
-| perfil     | enum('admin','usuario') | NO   |       | 'usuario'         |                |
-| is_admin   | tinyint(1)              | NO   |       | 0                 |                |
-| created_at | timestamp               | NO   |       | current_timestamp |                |
+### Tabela: migrations
 
-### Chaves Estrangeiras
-Nenhuma chave estrangeira nesta tabela.
+```    ERROR  Command "db:table migrations" is not defined. Did you mean one of these?      Ôçé db     Ôçé db:monitor     Ôçé db:seed     Ôçé db:show     Ôçé db:table     Ôçé db:wipe   ```
 
-## Tabela: filiais
+### Tabela: password_reset_tokens
 
-### Estrutura
+```    ERROR  Command "db:table password_reset_tokens" is not defined. Did you mean one of these?      Ôçé db     Ôçé db:monitor     Ôçé db:seed     Ôçé db:show     Ôçé db:table     Ôçé db:wipe   ```
 
+### Tabela: failed_jobs
 
+```    ERROR  Command "db:table failed_jobs" is not defined. Did you mean one of these?      Ôçé db     Ôçé db:monitor     Ôçé db:seed     Ôçé db:show     Ôçé db:table     Ôçé db:wipe   ```
 
+### Tabela: personal_access_tokens
 
-
-
-
-
-
-
-
-
-
+```    ERROR  Command "db:table personal_access_tokens" is not defined. Did you mean one of these?      Ôçé db     Ôçé db:monitor     Ôçé db:seed     Ôçé db:show     Ôçé db:table     Ôçé db:wipe   ```
