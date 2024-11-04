@@ -2,11 +2,24 @@
 Comandos POWERSHELL:
 
 
-#Listar estrutura de arquivos
+#Listar estrutura de arquivos (Simplificado)
 
 $date = Get-Date -Format "dd/MM/yyyy HH:mm:ss"
-"Estrutura de arquivos projeto SIM`nAtualizado em $date`n" | Out-File -FilePath C:\Projetos\sim\docs\structure.md -Encoding utf8
-tree C:\Projetos\sim /f /a | Out-File -FilePath C:\Projetos\sim\docs\structure.md -Append -Encoding utf8
+"Estrutura de arquivos projeto SIM`nAtualizado em $date`n" | Out-File -FilePath C:\Projetos\sim\docs\file_structure.md -Encoding utf8
+tree C:\Projetos\sim /f /a | Out-File -FilePath C:\Projetos\sim\docs\file_structure.md -Append -Encoding utf8
+
+
+
+
+
+#Atualizar arquivo de estrutura de arquivos (Completo)
+
+php artisan docs:update-file-structure
+
+#Atualizar arquivo de estrutura de banco de dados   
+
+php artisan db:update-structure
+
 
 
 

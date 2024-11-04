@@ -10,18 +10,25 @@ RUN apk add --no-cache \
     libxml2-dev \
     zip \
     unzip \
+    libzip-dev \
     git \
+    curl \
     oniguruma-dev \
     autoconf \
     gcc \
     g++ \
     make
 
-# Instalar extensões PHP
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+# Configurar e instalar extensões PHP
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
 # Instalar e habilitar a extensão Redis
 RUN pecl install redis && docker-php-ext-enable redis
+
+# Configurar variáveis de ambiente para o Composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV COMPOSER_HOME=/composer
 
 # Instalar o Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -29,20 +36,15 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Definir o diretório de trabalho
 WORKDIR /var/www/html
 
-# Copiar os arquivos de configuração do composer
-COPY composer.json composer.lock ./
-
-# Instalar dependências do projeto
-RUN composer install --no-scripts --no-autoloader
-
 # Copiar os arquivos do projeto
 COPY . .
 
-# Gerar o autoloader otimizado
-RUN composer dump-autoload --optimize
+# Instalar dependências do projeto
+RUN composer install --no-interaction
 
-# Dar permissão de escrita ao diretório storage
-RUN chown -R www-data:www-data storage bootstrap/cache
+# Dar permissões corretas
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Expor a porta 9000 (PHP-FPM)
 EXPOSE 9000

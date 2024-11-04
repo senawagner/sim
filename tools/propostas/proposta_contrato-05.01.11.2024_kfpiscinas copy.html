@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrato de Prestação de Serviços Digitais</title>
+    <style>
+        /* CSS Styles */
+        :root {
+            --primary-color: #1e1e1e; /* Azul escuro profissional */
+            --secondary-color: #34495e; /* Azul médio */
+            --accent-color: #3498db; /* Azul claro para destaque */
+            --text-primary: #2c3e50; /* Cor principal do texto */
+            --text-secondary: #7f8c8d; /* Cor secundária do texto */
+            --background-primary: #ffffff; /* Fundo principal */
+            --background-secondary: #f9f9f9; /* Fundo secundário */
+            --border-color: #e0e0e0; /* Cor das bordas */
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--background-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header, .footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .section {
+            padding: 30px;
+            margin-bottom: 30px;
+            background-color: var(--background-secondary);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .accept-button {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .accept-button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1>Contrato de Prestação de Serviços Digitais</h1>
+            <p>Desenvolvimento Web & Marketing Digital</p>
+        </div>
+
+        <!-- Conteúdo da proposta -->
+        <div class="section">
+            <h2>1. Partes Contratantes</h2>
+            <p>Este contrato é celebrado entre Coddar Digital, uma empresa de tecnologia com sede em Santos, doravante denominada "Contratada", e Freddy (KF Piscinas), também com sede em Santos, doravante denominado "Contratante".</p>
+        </div>
+        <!-- Adicione as outras seções aqui, conforme necessário -->
+
+        <!-- Aceite do Contrato Section -->
+        <div class="section acceptance-section">
+            <h2>Aceite do Contrato</h2>
+            <form action="<?php echo admin_url('admin-ajax.php'); ?>" method="POST" class="acceptance-form">
+                <input type="hidden" name="action" value="process_acceptance">
+                <div class="form-group">
+                    <input type="text" name="nome" required placeholder="Seu nome completo" class="form-input">
+                    <input type="email" name="email" required placeholder="Seu e-mail" class="form-input">
+                    <input type="text" name="proposta_nome" required placeholder="Nome da Proposta" class="form-input">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms">Li e aceito os termos do contrato</label>
+                    </div>
+                    <button type="submit" class="accept-button">Aceitar Contrato</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Footer Section -->
+        <div class="footer">
+            <p>#contrato-05.01.11.2024</p>
+            <p>Contato: Wagner Sena</p>
+            <p>Contato: (13) 9 8112-9460</p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>"; // Define a URL do AJAX
+
+        jQuery(document).ready(function($) {
+            $('.acceptance-form').on('submit', function(e) {
+                e.preventDefault(); // Impede o envio padrão do formulário
+
+                var formData = $(this).serialize(); // Serializa os dados do formulário
+
+                $.post(ajaxurl, formData, function(response) {
+                    if (response.success) {
+                        // Redireciona para a página de sucesso
+                        window.location.href = 'sucesso.html';
+                    } else {
+                        alert(response.data); // Exibe a mensagem de erro
+                    }
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    alert("Erro na requisição: " + textStatus + " - " + errorThrown);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

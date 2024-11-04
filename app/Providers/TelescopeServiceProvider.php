@@ -5,27 +5,19 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
-use Laravel\Telescope\TelescopeApplicationServiceProvider;
+use Laravel\Telescope\TelescopeServiceProvider as BaseTelescopeServiceProvider;
 
-class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
+class TelescopeServiceProvider extends BaseTelescopeServiceProvider
 {
     /**
      * Register any application services.
      */
     public function register(): void
     {
-        if ($this->app->environment('local')) {
-            $this->app->register(TelescopeApplicationServiceProvider::class);
-        }
-
-        // Telescope::night();
-
         $this->hideSensitiveRequestDetails();
 
-        $isLocal = $this->app->environment('local');
-
-        Telescope::filter(function (IncomingEntry $entry) use ($isLocal) {
-            return $isLocal ||
+        Telescope::filter(function (IncomingEntry $entry) {
+            return $this->app->environment('local') ||
                    $entry->isReportableException() ||
                    $entry->isFailedRequest() ||
                    $entry->isFailedJob() ||

@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Meu Controle Financeiro Simples</title>
+
+    <!-- CSS externos -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
+
+    <style>
+        /* Estilos gerais */
+        :root {
+            --cor-receita: #357A38;
+            --cor-despesa: #C0392B;
+            --cor-investimento: #6EC1E4;
+            --cor-saldo: #FFC107;
+        }
+
+        /* Responsividade da paginação */
+        @media (max-width: 768px) {
+            .page-item:not(:first-child):not(:last-child) {
+                display: none;
+            }
+            .pagination .disabled {
+                display: none;
+            }
+        }
+
+        /* Badges personalizados */
+        .custom-badge {
+            font-weight: 300;
+            font-size: 0.9em;
+            padding: 0.35em 0.6em;
+        }
+
+        .badge-receita {
+            background-color: var(--cor-receita);
+            color: #fff;
+        }
+
+        .badge-despesa {
+            background-color: var(--cor-despesa);
+            color: #fff;
+        }
+
+        .badge-investimento {
+            background-color: var(--cor-investimento);
+            color: #000;
+        }
+
+        /* Cards de totais */
+        .card-totais {
+            transition: all 0.3s ease;
+        }
+
+        .card-totais:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Efeitos de hover na tabela */
+        .table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(0,0,0,0.02);
+        }
+
+        /* Animação para linha editada */
+        .editar-linha {
+            background-color: rgba(255, 243, 205, 0.5);
+        }
+
+        @keyframes pulse {
+            0% { background-color: rgba(255, 243, 205, 0.5); }
+            50% { background-color: rgba(255, 243, 205, 0.8); }
+            100% { background-color: rgba(255, 243, 205, 0.5); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Overlay de carregamento */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 1050;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Efeito blur para valores */
+        .blurred {
+            filter: blur(4px);
+            transition: filter 0.3s ease;
+        }
+
+        .blurred:hover {
+            filter: blur(0);
+        }
+
+        /* Estilos para categorias destacadas */
+        .categoria-destacada {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--cor-receita);
+        }
+
+        /* Estilo para inputs monetários */
+        .input-money {
+            text-align: right;
+            font-family: monospace;
+        }
+
+        /* Estilo para botões de ação */
+        .btn-action {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            border-radius: 0.2rem;
+        }
+
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Tooltip personalizado */
+        .custom-tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .custom-tooltip .tooltip-text {
+            visibility: hidden;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .custom-tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Tema escuro */
+        body.dark-theme {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+
+        /* Cards no tema escuro */
+        .dark-theme .card {
+            background-color: #2d2d2d;
+            border-color: #404040;
+        }
+
+        .dark-theme .card-header {
+            background-color: #404040;
+            border-bottom-color: #505050;
+            color: #ffffff;
+        }
+
+        /* Tabelas no tema escuro */
+        .dark-theme .table {
+            color: #ffffff;
+        }
+
+        .dark-theme .table td, 
+        .dark-theme .table th {
+            border-color: #404040;
+        }
+
+        .dark-theme .table-hover tbody tr:hover {
+            background-color: #383838;
+        }
+
+        /* Inputs no tema escuro */
+        .dark-theme .form-control,
+        .dark-theme .form-select {
+            background-color: #2d2d2d;
+            border-color: #404040;
+            color: #ffffff;
+        }
+
+        .dark-theme .form-control:focus,
+        .dark-theme .form-select:focus {
+            background-color: #2d2d2d;
+            border-color: #0d6efd;
+            color: #ffffff;
+        }
+
+        /* Modal no tema escuro */
+        .dark-theme .modal-content {
+            background-color: #2d2d2d;
+            color: #ffffff;
+        }
+
+        .dark-theme .modal-header {
+            border-bottom-color: #404040;
+        }
+
+        .dark-theme .modal-footer {
+            border-top-color: #404040;
+        }
+
+        /* Navegação no tema escuro */
+        .dark-theme .nav-tabs {
+            border-bottom-color: #404040;
+        }
+
+        .dark-theme .nav-tabs .nav-link {
+            color: #ffffff;
+        }
+
+        .dark-theme .nav-tabs .nav-link:hover {
+            border-color: #404040;
+        }
+
+        .dark-theme .nav-tabs .nav-link.active {
+            background-color: #2d2d2d;
+            border-color: #404040;
+            color: #ffffff;
+        }
+
+        /* Placeholders no tema escuro */
+        .dark-theme .form-control::placeholder {
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-piggy-bank me-2"></i>
+                Meu Controle Financeiro Simples
+            </a>
+            <div class="ms-auto">
+                <button class="btn btn-outline-light btn-sm me-2" id="disconnectButton" style="display: none;">
+                    <i class="fas fa-power-off"></i>
+                </button>
+                <button class="btn btn-outline-light btn-sm" id="configButton">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Adicione logo após o navbar -->
+    <div class="modal fade" id="configModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Configuração do Supabase</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Abas -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="instrucoes-tab" data-bs-toggle="tab" href="#instrucoes">
+                                Instruções
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="configuracao-tab" data-bs-toggle="tab" href="#configuracao">
+                                Configuração
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="personalizacao-tab" data-bs-toggle="tab" href="#personalizacao">
+                                Personalização
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Conteúdo das Abas -->
+                    <div class="tab-content mt-3">
+                        <!-- Aba Instruções -->
+                        <div class="tab-pane fade show active" id="instrucoes">
+                            <h6>Instruções para configurar o Supabase:</h6>
+                            <ol>
+                                <li>Criar um projeto no Supabase.</li>
+                                <li>Executar o seguinte SQL no Supabase:</li>
+                                <div class="bg-dark text-light p-3 rounded mb-3" style="position: relative;">
+                                    <pre style="margin-bottom: 0;"><code>CREATE TABLE IF NOT EXISTS public.setup (
+    id serial PRIMARY KEY,
+    app_name_or_logo text NOT NULL,
+    is_logo boolean NOT NULL DEFAULT false,
+    highlighted_categories jsonb DEFAULT '[]'
+);
+
+INSERT INTO public.setup (id, app_name_or_logo, is_logo, highlighted_categories)
+VALUES (1, 'Konto Controle Financeiro', false, '[]')
+ON CONFLICT (id) DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS public.categories (
+    id serial PRIMARY KEY,
+    categoria text NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS public.entries (
+    id serial PRIMARY KEY,
+    tipo text NOT NULL,
+    data date NOT NULL,
+    descricao text NOT NULL,
+    valor numeric(12, 2) NOT NULL,
+    categoria_id integer REFERENCES public.categories(id) ON DELETE SET NULL
+);</code></pre>
+                                     <button class="btn btn-primary btn-sm position-absolute top-0 end-0 m-2" onclick="copiarSQL()">
+                                         Copiar SQL
+                                     </button>
+                                </div>
+                                <li>Ir em Configurações > API e copiar a Anon Key e a URL do Supabase.</li>
+                                <li>Editar o parâmetro "max rows" para 80000.</li>
+                            </ol>
+                        </div>
+
+                        <!-- Aba Configuração -->
+                        <div class="tab-pane fade" id="configuracao">
+                            <div class="mb-3">
+                                <label for="supabaseUrl" class="form-label">URL do Supabase</label>
+                                <input type="text" class="form-control" id="supabaseUrl" placeholder="https://seu-projeto.supabase.co">
+                            </div>
+                            <div class="mb-3">
+                                <label for="supabaseKey" class="form-label">Chave Anônima do Supabase</label>
+                                <input type="text" class="form-control" id="supabaseKey" placeholder="sua-chave-anonima">
+                            </div>
+                        </div>
+
+                        <!-- Aba Personalização -->
+                        <div class="tab-pane fade" id="personalizacao">
+                            <div class="mb-3">
+                                <label class="form-label">Tema</label>
+                                <select class="form-select" id="themeSelect">
+                                    <option value="light">Claro</option>
+                                    <option value="dark">Escuro</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="saveConfig">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container Principal -->
+    <div class="container mt-4">
+        <!-- Abas de Navegação -->
+        <ul class="nav nav-tabs mb-4" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="lancamentos-tab" data-bs-toggle="tab" href="#lancamentos">
+                    <i class="fas fa-list me-2"></i>Lançamentos
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="overview-tab" data-bs-toggle="tab" href="#overview">
+                    <i class="fas fa-chart-pie me-2"></i>Overview
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="categorias-tab" data-bs-toggle="tab" href="#categorias">
+                    <i class="fas fa-tags me-2"></i>Categorias Destacadas
+                </a>
+            </li>
+        </ul>
+
+        <!-- Conteúdo das Abas -->
+        <div class="tab-content">
+            <!-- Aba Lançamentos -->
+            <div class="tab-pane fade show active" id="lancamentos">
+                <!-- Cards de Totais -->
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h5 class="card-title text-success">
+                                    <i class="fas fa-plus-circle me-2"></i>Receitas
+                                </h5>
+                                <p class="card-text total-value" id="totalReceitas">R$ 0,00</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Outros cards similares para Despesas, Investimentos e Saldo -->
+                </div>
+
+                <!-- Formulário de Entrada -->
+                <div class="card mb-4" id="entryFormCard">
+                    <div class="card-header">
+                        Adicionar Lançamento
+                        <i class="fas fa-eye float-end" id="toggleTotalVisibility" style="cursor: pointer;"></i>
+                    </div>
+                    <div class="card-body">
+                        <form id="entryForm">
+                            <input type="hidden" id="entryId">
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="tipo" class="form-label">Tipo</label>
+                                    <select class="form-select" id="tipo" required>
+                                        <option value="">Selecione</option>
+                                        <option value="Receita">Receita</option>
+                                        <option value="Despesa">Despesa</option>
+                                        <option value="Investimento">Investimento</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="data" class="form-label">Data</label>
+                                    <input type="text" class="form-control" id="data" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="categoria" class="form-label">Categoria</label>
+                                    <input type="text" class="form-control" id="categoria" placeholder="Ex: Salário" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="valor" class="form-label">Valor</label>
+                                    <input type="text" class="form-control" id="valor" placeholder="0,00" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="recorrente" class="form-label">Lançamento Recorrente</label>
+                                    <select class="form-select" id="recorrente">
+                                        <option value="nao">Não</option>
+                                        <option value="semanal">Semanal</option>
+                                        <option value="quinzenal">Quinzenal</option>
+                                        <option value="mensal">Mensal</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3" style="display: none;" id="parcelasGroup">
+                                    <label for="parcelas" class="form-label">Número de Parcelas</label>
+                                    <input type="number" class="form-control" id="parcelas" min="1" value="1">
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="descricao" class="form-label">Descrição</label>
+                                    <textarea class="form-control" id="descricao" rows="2" required></textarea>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary" id="submitButton">Adicionar</button>
+                            </div>
+                            <div id="formFeedback" style="display: none;"></div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Tabela de Lançamentos -->
+                <div class="card">
+                    <div class="card-header">
+                        Lançamentos Financeiros
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table" id="entriesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Tipo</th>
+                                        <th>Categoria</th>
+                                        <th>Descrição</th>
+                                        <th>Valor (R$)</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <!-- Paginação -->
+                        <nav aria-label="Navegação">
+                            <ul class="pagination justify-content-center" id="pagination"></ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts necessários -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script>
+        // Variáveis globais
+        let entries = [], filteredEntries = [];
+        let currentPage = 1, itemsPerPage = 50;
+        let currentYear, currentMonth;
+        let graficoMensalChart, graficoReceitasDespesasChart, graficoCategoriasChart;
+        let supabaseClient = null;
+        let isEditing = false;
+        let lastEditedRowId = null;
+        let categorias = [];
+        let categoriaIdMap = {};
+        
+        // Configuração inicial
+        $(document).ready(function() {
+            moment.locale("pt-br");
+            setupTheme(); // Adicione esta linha
+            initializeSupabase();
+            setupEventListeners();
+            
+            // Configurar datepicker
+            $("#data").datepicker({
+                dateFormat: 'yy-mm-dd',
+                dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+                dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+                dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+                monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+                            'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+                monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun',
+                                'Jul','Ago','Set','Out','Nov','Dez'],
+                nextText: 'Próximo',
+                prevText: 'Anterior'
+            });
+
+            // Configurar autocomplete para categorias
+            $("#categoria").autocomplete({
+                source: categorias,
+                minLength: 0
+            }).focus(function() {
+                $(this).autocomplete("search", "");
+            });
+
+            // Configurar máscara para valor
+            $("#valor").mask('000.000.000,00', {reverse: true});
+
+            // Definir data atual
+            const today = moment().format('YYYY-MM-DD');
+            $("#data").val(today);
+            
+            // Definir ano e mês atual para filtros
+            currentYear = moment().year();
+            currentMonth = moment().format('MM');
+            
+            // Inicializar Supabase
+            initializeSupabase();
+            
+            // Configurar event listeners
+            setupEventListeners();
+        });
+
+        // Inicialização do Supabase
+        async function initializeSupabase() {
+            const url = localStorage.getItem('supabaseUrl');
+            const key = localStorage.getItem('supabaseAnonKey');
+            
+            if (!url || !key) {
+                // Mostrar modal de configuração se não houver dados salvos
+                $("#configModal").modal("show");
+                return;
+            }
+
+            try {
+                supabaseClient = supabase.createClient(url, key);
+                await loadInitialData();
+                $("#disconnectButton").show();
+            } catch (error) {
+                console.error('Erro ao conectar com Supabase:', error);
+                alert('Erro ao conectar com Supabase. Por favor, verifique suas credenciais.');
+                $("#configModal").modal("show");
+            }
+        }
+
+        // Carregar dados iniciais
+        async function loadInitialData() {
+            try {
+                const overlay = $("#overlay");
+                overlay.show();
+
+                // Carregar categorias
+                const { data: categoriesData, error: categoriesError } = await supabaseClient
+                    .from('categories')
+                    .select('*')
+                    .order('categoria');
+
+                if (categoriesError) throw categoriesError;
+
+                categorias = categoriesData.map(cat => cat.categoria);
+                categoriesData.forEach(cat => {
+                    categoriaIdMap[cat.categoria] = cat.id;
+                });
+
+                // Carregar lançamentos
+                const { data: entriesData, error: entriesError } = await supabaseClient
+                    .from('entries')
+                    .select(`
+                        id,
+                        tipo,
+                        data,
+                        descricao,
+                        valor,
+                        categories (
+                            categoria
+                        )
+                    `)
+                    .order('data', { ascending: false });
+
+                if (entriesError) throw entriesError;
+
+                entries = entriesData.map(entry => ({
+                    id: entry.id,
+                    tipo: entry.tipo,
+                    data: entry.data,
+                    categoria: entry.categories?.categoria || 'Sem categoria',
+                    descricao: entry.descricao,
+                    valor: entry.valor
+                }));
+
+                // Atualizar interface
+                updateInterface();
+                
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
+                alert('Erro ao carregar dados. Verifique o console para mais detalhes.');
+            } finally {
+                $("#overlay").hide();
+            }
+        }
+
+        // Atualizar interface
+        function updateInterface() {
+            ordenarLancamentos();
+            atualizarTabela();
+            preencherFiltrosAnoMes();
+            aplicarFiltrosOverview();
+            $("#categoria").autocomplete("option", "source", categorias);
+        }
+
+        // Manipulação do formulário
+        async function handleEntrySubmit(e) {
+            e.preventDefault();
+            console.log('Formulário submetido'); // Debug
+
+            const submitButton = $("#submitButton");
+            submitButton.prop("disabled", true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processando...');
+
+            try {
+                // Validar conexão com Supabase
+                if (!supabaseClient) {
+                    throw new Error("Por favor, configure a conexão com o Supabase primeiro.");
+                }
+
+                // Coletar dados do formulário
+                const entryId = $("#entryId").val();
+                const tipo = $("#tipo").val();
+                const dataInput = $("#data").val();
+                const categoria = $("#categoria").val();
+                const descricao = $("#descricao").val();
+                const valorStr = $("#valor").val().replace(/\./g, '').replace(',', '.');
+                const valor = parseFloat(valorStr);
+                const recorrente = $("#recorrente").val();
+                const parcelas = parseInt($("#parcelas").val()) || 1;
+
+                // Validações básicas
+                if (!tipo || !dataInput || !categoria || !descricao || isNaN(valor)) {
+                    throw new Error("Por favor, preencha todos os campos corretamente.");
+                }
+
+                // Verificar categoria existente ou criar nova
+                let categoria_id = categoriaIdMap[categoria];
+                if (!categoria_id) {
+                    const { data: newCategory, error: categoryError } = await supabaseClient
+                        .from('categories')
+                        .insert([{ categoria }])
+                        .select();
+
+                    if (categoryError) throw categoryError;
+                    
+                    categoria_id = newCategory[0].id;
+                    categorias.push(categoria);
+                    categoriaIdMap[categoria] = categoria_id;
+                }
+
+                // Criar entrada(s)
+                if (!entryId) {
+                    // Novo lançamento
+                    const entriesToInsert = [];
+                    for (let i = 0; i < parcelas; i++) {
+                        const novaData = calcularNovaData(dataInput, recorrente, i);
+                        entriesToInsert.push({
+                            tipo,
+                            data: novaData,
+                            categoria_id,
+                            descricao: parcelas > 1 ? `${descricao} (${i + 1}/${parcelas})` : descricao,
+                            valor
+                        });
+                    }
+
+                    const { data: newEntries, error: insertError } = await supabaseClient
+                        .from('entries')
+                        .insert(entriesToInsert)
+                        .select();
+
+                    if (insertError) throw insertError;
+
+                    // Adicionar à lista local
+                    newEntries.forEach(entry => {
+                        entries.unshift({
+                            id: entry.id,
+                            tipo: entry.tipo,
+                            data: entry.data,
+                            categoria,
+                            descricao: entry.descricao,
+                            valor: entry.valor
+                        });
+                    });
+
+                    showFeedback('success', 'Lançamento(s) adicionado(s) com sucesso!');
+                } else {
+                    // Atualização
+                    const { error: updateError } = await supabaseClient
+                        .from('entries')
+                        .update({
+                            tipo,
+                            data: dataInput,
+                            categoria_id,
+                            descricao,
+                            valor
+                        })
+                        .eq('id', entryId);
+
+                    if (updateError) throw updateError;
+
+                    const index = entries.findIndex(e => e.id === parseInt(entryId));
+                    if (index !== -1) {
+                        entries[index] = {
+                            id: parseInt(entryId),
+                            tipo,
+                            data: dataInput,
+                            categoria,
+                            descricao,
+                            valor
+                        };
+                    }
+
+                    showFeedback('success', 'Lançamento atualizado com sucesso!');
+                }
+
+                // Resetar formulário e atualizar interface
+                resetForm();
+                updateInterface();
+
+            } catch (error) {
+                console.error('Erro ao salvar lançamento:', error);
+                showFeedback('error', 'Erro ao salvar lançamento: ' + error.message);
+            } finally {
+                submitButton.prop("disabled", false).html('Adicionar');
+            }
+        }
+
+        // Função auxiliar para calcular nova data
+        function calcularNovaData(data, tipoRecorrencia, incremento) {
+            const novaData = moment(data);
+            switch(tipoRecorrencia) {
+                case 'semanal':
+                    return novaData.add(incremento, 'weeks').format('YYYY-MM-DD');
+                case 'quinzenal':
+                    return novaData.add(incremento * 15, 'days').format('YYYY-MM-DD');
+                case 'mensal':
+                    return novaData.add(incremento, 'months').format('YYYY-MM-DD');
+                default:
+                    return data;
+            }
+        }
+
+        // Remover lançamento
+        async function handleRemoveEntry(entryId) {
+            if (!confirm('Tem certeza que deseja remover este lançamento?')) return;
+
+            try {
+                const { error } = await supabaseClient
+                    .from('entries')
+                    .delete()
+                    .eq('id', entryId);
+
+                if (error) throw error;
+
+                entries = entries.filter(entry => entry.id !== entryId);
+                updateInterface();
+                showFeedback('success', 'Lançamento removido com sucesso!');
+
+            } catch (error) {
+                console.error('Erro ao remover lançamento:', error);
+                showFeedback('error', 'Erro ao remover lançamento: ' + error.message);
+            }
+        }
+
+        // Editar lançamento
+        function handleEditEntry(entry) {
+            isEditing = true;
+            $("#entryId").val(entry.id);
+            $("#tipo").val(entry.tipo);
+            $("#data").val(entry.data);
+            $("#categoria").val(entry.categoria);
+            $("#descricao").val(entry.descricao);
+            $("#valor").val(entry.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
+            
+            $("#submitButton").text('Atualizar');
+            $("#entryFormCard .card-header").text('Editar Lançamento');
+            $("#entryForm").addClass('edit-mode');
+            $(".card").addClass('edit-mode');
+
+            // Scroll suave até o formulário
+            $('html, body').animate({
+                scrollTop: $("#entryForm").offset().top - 100
+            }, 500);
+        }
+
+        // Funções auxiliares
+        function resetForm() {
+            $("#entryForm")[0].reset();
+            $("#data").val(moment().format('YYYY-MM-DD'));
+            $("#entryId").val('');
+            $("#submitButton").text('Adicionar');
+            $("#entryFormCard .card-header").text('Adicionar Lançamento');
+            $("#entryForm").removeClass('edit-mode');
+            $(".card").removeClass('edit-mode');
+            isEditing = false;
+        }
+
+        function showFeedback(type, message) {
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+            $("#formFeedback")
+                .html(`<div class="alert ${alertClass}">${message}</div>`)
+                .fadeIn();
+
+            setTimeout(() => {
+                $("#formFeedback").fadeOut();
+            }, 5000);
+        }
+
+        // Atualização da tabela e filtros
+        function atualizarTabela() {
+            const tbody = $("#entriesTable tbody");
+            tbody.empty();
+            
+            // Aplicar filtros
+            filteredEntries = entries.slice();
+            const tipoFiltro = $("#filterTipo").val();
+            const categoriaFiltro = $("#filterCategoria").val();
+            const anoFiltro = $("#filterAno").val();
+            const mesFiltro = $("#filterMes").val();
+            const descricaoFiltro = $("#filterDescricao").val().toLowerCase();
+
+            if (tipoFiltro) {
+                filteredEntries = filteredEntries.filter(entry => entry.tipo === tipoFiltro);
+            }
+            if (categoriaFiltro) {
+                filteredEntries = filteredEntries.filter(entry => entry.categoria === categoriaFiltro);
+            }
+            if (anoFiltro) {
+                filteredEntries = filteredEntries.filter(entry => 
+                    moment(entry.data).year() === parseInt(anoFiltro)
+                );
+            }
+            if (mesFiltro) {
+                filteredEntries = filteredEntries.filter(entry => 
+                    moment(entry.data).format('MM') === mesFiltro
+                );
+            }
+            if (descricaoFiltro) {
+                filteredEntries = filteredEntries.filter(entry => 
+                    entry.descricao.toLowerCase().includes(descricaoFiltro)
+                );
+            }
+
+            // Paginação
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const entriesToShow = filteredEntries.slice(startIndex, endIndex);
+
+            // Renderizar linhas
+            entriesToShow.forEach(entry => {
+                const badgeClass = getBadgeClass(entry.tipo);
+                const formattedDate = moment(entry.data).format('DD/MM/YYYY');
+                
+                const row = $(`
+                    <tr data-id="${entry.id}">
+                        <td>${formattedDate}</td>
+                        <td><span class="badge custom-badge badge-${badgeClass}">${entry.tipo}</span></td>
+                        <td>${entry.categoria}</td>
+                        <td>${entry.descricao}</td>
+                        <td class="text-end">R$ ${entry.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-primary edit-entry me-1" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger remove-entry" title="Remover">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `);
+
+                if (entry.id === lastEditedRowId) {
+                    row.addClass("editar-linha pulse");
+                    setTimeout(() => row.removeClass("editar-linha pulse"), 5000);
+                }
+                
+                tbody.append(row);
+            });
+
+            // Atualizar paginação e totais
+            atualizarPaginacao();
+            atualizarTotais();
+        }
+
+        // Atualização dos totais
+        function atualizarTotais() {
+            let totalReceitas = 0, totalDespesas = 0, totalInvestimentos = 0;
+            
+            filteredEntries.forEach(entry => {
+                const valor = parseFloat(entry.valor);
+                switch(entry.tipo) {
+                    case 'Receita':
+                        totalReceitas += valor;
+                        break;
+                    case 'Despesa':
+                        totalDespesas += valor;
+                        break;
+                    case 'Investimento':
+                        totalInvestimentos += valor;
+                        break;
+                }
+            });
+
+            const saldo = totalReceitas - totalDespesas - totalInvestimentos;
+
+            // Atualizar cards
+            $("#totalReceitas").text(formatCurrency(totalReceitas));
+            $("#totalDespesas").text(formatCurrency(totalDespesas));
+            $("#totalInvestimentos").text(formatCurrency(totalInvestimentos));
+            $("#saldoTotal").text(formatCurrency(saldo));
+
+            // Atualizar classe do saldo
+            const saldoElement = $("#saldoTotal");
+            saldoElement.removeClass("text-success text-danger");
+            saldoElement.addClass(saldo >= 0 ? "text-success" : "text-danger");
+        }
+
+        // Paginação
+        function atualizarPaginacao() {
+            const totalPages = Math.ceil(filteredEntries.length / itemsPerPage);
+            const pagination = $("#pagination");
+            pagination.empty();
+
+            if (totalPages <= 1) return;
+
+            const maxVisiblePages = 5;
+            const startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages/2));
+            const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+            // Botão anterior
+            pagination.append(`
+                <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" id="prevPage">Anterior</a>
+                </li>
+            `);
+
+            // Primeira página
+            if (startPage > 1) {
+                pagination.append(`
+                    <li class="page-item">
+                        <a class="page-link" href="#" data-page="1">1</a>
+                    </li>
+                `);
+                if (startPage > 2) {
+                    pagination.append('<li class="page-item disabled"><span class="page-link">...</span></li>');
+                }
+            }
+
+            // Páginas numeradas
+            for (let i = startPage; i <= endPage; i++) {
+                pagination.append(`
+                    <li class="page-item ${currentPage === i ? 'active' : ''}">
+                        <a class="page-link" href="#" data-page="${i}">${i}</a>
+                    </li>
+                `);
+            }
+
+            // Última página
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    pagination.append('<li class="page-item disabled"><span class="page-link">...</span></li>');
+                }
+                pagination.append(`
+                    <li class="page-item">
+                        <a class="page-link" href="#" data-page="${totalPages}">${totalPages}</a>
+                    </li>
+                `);
+            }
+
+            // Botão próximo
+            pagination.append(`
+                <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" id="nextPage">Próximo</a>
+                </li>
+            `);
+
+            // Event listeners da paginação
+            setupPaginationEventListeners();
+        }
+
+        // Funções auxiliares
+        function getBadgeClass(tipo) {
+            switch(tipo) {
+                case 'Receita': return 'receita';
+                case 'Despesa': return 'despesa';
+                case 'Investimento': return 'investimento';
+                default: return '';
+            }
+        }
+
+        function formatCurrency(value) {
+            return `R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+        }
+
+        function ordenarLancamentos() {
+            entries.sort((a, b) => moment(b.data).valueOf() - moment(a.data).valueOf());
+        }
+
+        // Funções de gráficos
+        function aplicarFiltrosOverview() {
+            const tipo = $("#overviewTipo").val();
+            const anoSelecionado = parseInt($("#overviewAno").val());
+            const mesSelecionado = $("#overviewMes").val();
+
+            // Filtrar entradas
+            const filtered = entries.filter(entry => {
+                const entryDate = moment(entry.data);
+                const entryYear = entryDate.year();
+                const entryMonth = entryDate.format('MM');
+                
+                const matchTipo = tipo ? entry.tipo === tipo : true;
+                const matchAno = anoSelecionado ? entryYear === anoSelecionado : true;
+                const matchMes = mesSelecionado ? entryMonth === mesSelecionado : true;
+                
+                return matchTipo && matchAno && matchMes;
+            });
+
+            // Verificar se há dados
+            if (filtered.length === 0) {
+                $("#graficoReceitasDespesasInvestimentos").replaceWith(
+                    '<p id="graficoReceitasDespesasInvestimentos" class="text-center mt-4">Não há dados para o período selecionado.</p>'
+                );
+                $("#graficoCategorias").replaceWith(
+                    '<p id="graficoCategorias" class="text-center mt-4">Não há dados para o período selecionado.</p>'
+                );
+                $("#graficoMensal").replaceWith(
+                    '<p id="graficoMensal" class="text-center mt-4">Não há dados para o período selecionado.</p>'
+                );
+                return;
+            }
+
+            // Recriar canvas se necessário
+            if ($("#graficoReceitasDespesasInvestimentos").prop("tagName") !== "CANVAS") {
+                $("#graficoReceitasDespesasInvestimentos").replaceWith('<canvas id="graficoReceitasDespesasInvestimentos"></canvas>');
+            }
+            if ($("#graficoCategorias").prop("tagName") !== "CANVAS") {
+                $("#graficoCategorias").replaceWith('<canvas id="graficoCategorias"></canvas>');
+            }
+            if ($("#graficoMensal").prop("tagName") !== "CANVAS") {
+                $("#graficoMensal").replaceWith('<canvas id="graficoMensal"></canvas>');
+            }
+
+            // Gerar gráficos
+            gerarGraficoReceitasDespesas(filtered);
+            gerarGraficoCategorias(filtered, tipo);
+            gerarGraficoMensal(anoSelecionado, mesSelecionado, filtered);
+        }
+
+        function gerarGraficoReceitasDespesas(filteredEntries) {
+            let totalReceitas = 0, totalDespesas = 0, totalInvestimentos = 0;
+            
+            filteredEntries.forEach(entry => {
+                const valor = parseFloat(entry.valor);
+                switch(entry.tipo) {
+                    case 'Receita': totalReceitas += valor; break;
+                    case 'Despesa': totalDespesas += valor; break;
+                    case 'Investimento': totalInvestimentos += valor; break;
+                }
+            });
+
+            const ctx = document.getElementById('graficoReceitasDespesasInvestimentos').getContext('2d');
+            
+            if (graficoReceitasDespesasChart) {
+                graficoReceitasDespesasChart.destroy();
+            }
+
+            const totalGeral = totalReceitas + totalDespesas + totalInvestimentos;
+
+            graficoReceitasDespesasChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Receitas', 'Despesas', 'Investimentos'],
+                    datasets: [{
+                        data: [totalReceitas, totalDespesas, totalInvestimentos],
+                        backgroundColor: ['#357A38', '#C0392B', '#6EC1E4'],
+                        borderWidth: 1,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        datalabels: {
+                            color: '#fff',
+                            formatter: function(value) {
+                                const porcentagem = (value/totalGeral) * 100;
+                                return Math.round(porcentagem) + '%';
+                            },
+                            font: { size: 12 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    const porcentagem = ((value/totalGeral) * 100).toFixed(2);
+                                    return `${context.label}: ${formatCurrency(value)} (${porcentagem}%)`;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: { boxWidth: 20, padding: 15 }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribuição de Receitas, Despesas e Investimentos'
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+        }
+
+        function gerarGraficoCategorias(filteredEntries, tipoFiltro) {
+            const categoriasTotais = {};
+            let totalValor = 0;
+
+            filteredEntries.forEach(entry => {
+                if (!categoriasTotais[entry.categoria]) {
+                    categoriasTotais[entry.categoria] = 0;
+                }
+                categoriasTotais[entry.categoria] += parseFloat(entry.valor);
+                totalValor += parseFloat(entry.valor);
+            });
+
+            const ctx = document.getElementById('graficoCategorias').getContext('2d');
+            
+            if (graficoCategoriasChart) {
+                graficoCategoriasChart.destroy();
+            }
+
+            const cores = gerarCoresGradiente(Object.keys(categoriasTotais).length);
+
+            graficoCategoriasChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(categoriasTotais),
+                    datasets: [{
+                        label: 'Total por Categoria',
+                        data: Object.values(categoriasTotais),
+                        backgroundColor: cores,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'right',
+                            formatter: function(value) {
+                                const porcentagem = (value/totalValor) * 100;
+                                return Math.round(porcentagem) + '%';
+                            },
+                            color: '#000',
+                            font: { size: 10 }
+                        },
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: 'Distribuição por Categoria' + (tipoFiltro ? ` - ${tipoFiltro}` : '')
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => formatCurrency(value)
+                            }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+        }
+
+        function gerarGraficoMensal(anoSelecionado, mesSelecionado, filteredEntries) {
+            const receitasPorMes = Array(12).fill(0);
+            const despesasPorMes = Array(12).fill(0);
+            const investimentosPorMes = Array(12).fill(0);
+
+            filteredEntries.forEach(entry => {
+                const entryDate = moment(entry.data);
+                const entryMonth = entryDate.month();
+                const valor = parseFloat(entry.valor);
+
+                switch(entry.tipo) {
+                    case 'Receita': receitasPorMes[entryMonth] += valor; break;
+                    case 'Despesa': despesasPorMes[entryMonth] += valor; break;
+                    case 'Investimento': investimentosPorMes[entryMonth] += valor; break;
+                }
+            });
+
+            const ctx = document.getElementById('graficoMensal').getContext('2d');
+            
+            if (graficoMensalChart) {
+                graficoMensalChart.destroy();
+            }
+
+            graficoMensalChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                    datasets: [
+                        {
+                            label: 'Receitas',
+                            data: receitasPorMes,
+                            backgroundColor: '#357A38'
+                        },
+                        {
+                            label: 'Despesas',
+                            data: despesasPorMes,
+                            backgroundColor: '#C0392B'
+                        },
+                        {
+                            label: 'Investimentos',
+                            data: investimentosPorMes,
+                            backgroundColor: '#6EC1E4'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => formatCurrency(value)
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Evolução Mensal ${anoSelecionado ? '- ' + anoSelecionado : ''}`
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: context => `${context.dataset.label}: ${formatCurrency(context.raw)}`
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Função auxiliar para gerar cores
+        function gerarCoresGradiente(quantidade) {
+            const coresBase = [
+                [53, 122, 56],   // Verde
+                [192, 57, 43],   // Vermelho
+                [110, 193, 228], // Azul
+                [241, 196, 15],  // Amarelo
+                [142, 68, 173],  // Roxo
+                [230, 126, 34],  // Laranja
+                [26, 188, 156],  // Turquesa
+                [52, 152, 219],  // Azul claro
+            ];
+
+            const cores = [];
+            for (let i = 0; i < quantidade; i++) {
+                const corBase = coresBase[i % coresBase.length];
+                const opacity = 0.7 + (i * 0.3 / quantidade);
+                cores.push(`rgba(${corBase[0]}, ${corBase[1]}, ${corBase[2]}, ${opacity})`);
+            }
+
+            return cores;
+        }
+
+        // Event Listeners e Inicialização
+        function setupEventListeners() {
+            // Formulário principal
+            $("#entryForm").on("submit", handleEntrySubmit);
+            $("#tipo").on("change", function() {
+                const tipo = $(this).val();
+                $("#categoria").val("").focus();
+            });
+
+            // Botões de ação na tabela
+            $(document).on("click", ".edit-entry", function() {
+                const id = $(this).closest("tr").data("id");
+                const entry = entries.find(e => e.id === id);
+                if (entry) handleEditEntry(entry);
+            });
+
+            $(document).on("click", ".remove-entry", function() {
+                const id = $(this).closest("tr").data("id");
+                handleRemoveEntry(id);
+            });
+
+            // Filtros
+            $("#filterTipo, #filterCategoria, #filterAno, #filterMes, #filterDescricao").on("change keyup", function() {
+                currentPage = 1;
+                atualizarTabela();
+            });
+
+            // Overview
+            $("#overviewTipo, #overviewAno, #overviewMes").on("change", function() {
+                aplicarFiltrosOverview();
+            });
+
+            // Configuração Supabase
+            $("#configButton").on("click", function() {
+                const url = localStorage.getItem('supabaseUrl');
+                const key = localStorage.getItem('supabaseAnonKey');
+                
+                // Preencher campos se houver dados salvos
+                if (url) $("#supabaseUrl").val(url);
+                if (key) $("#supabaseKey").val(key);
+                
+                $("#configModal").modal("show");
+            });
+
+            $("#saveConfig").on("click", async function() {
+                const url = $("#supabaseUrl").val().trim();
+                const key = $("#supabaseKey").val().trim();
+                const theme = $("#themeSelect").val();
+                
+                if (!url || !key) {
+                    alert("Por favor, preencha todos os campos de configuração do Supabase.");
+                    return;
+                }
+
+                try {
+                    // Testar conexão antes de salvar
+                    const testClient = supabase.createClient(url, key);
+                    const { error } = await testClient.from('entries').select('id').limit(1);
+                    
+                    if (error) throw error;
+
+                    // Salvar configurações
+                    localStorage.setItem("supabaseUrl", url);
+                    localStorage.setItem("supabaseAnonKey", key);
+                    localStorage.setItem("theme", theme);
+                    
+                    // Aplicar tema
+                    applyTheme(theme);
+                    
+                    await initializeSupabase();
+                    $("#configModal").modal("hide");
+                    showFeedback('success', 'Configurações salvas com sucesso!');
+                    
+                } catch (error) {
+                    console.error('Erro ao testar conexão:', error);
+                    alert('Erro ao conectar com Supabase. Por favor, verifique suas credenciais.');
+                }
+            });
+
+            // Desconexão Supabase
+            $("#disconnectButton").on("click", function() {
+                if (confirm("Deseja realmente desconectar do Supabase?")) {
+                    localStorage.removeItem("supabaseUrl");
+                    localStorage.removeItem("supabaseAnonKey");
+                    location.reload();
+                }
+            });
+
+            // Toggle visibilidade dos valores
+            $("#toggleTotalVisibility").on("click", function() {
+                $(".total-value").toggleClass("blurred");
+                const icon = $(this).find("i");
+                icon.toggleClass("fa-eye fa-eye-slash");
+            });
+
+            // Exportação
+            $("#exportButton").on("click", async function() {
+                try {
+                    $("#overlay").show();
+                    
+                    const wb = XLSX.utils.book_new();
+                    const ws_data = [
+                        ["Data", "Tipo", "Categoria", "Descrição", "Valor (R$)"]
+                    ];
+
+                    filteredEntries.forEach(entry => {
+                        ws_data.push([
+                            moment(entry.data).format("DD/MM/YYYY"),
+                            entry.tipo,
+                            entry.categoria,
+                            entry.descricao,
+                            entry.valor
+                        ]);
+                    });
+
+                    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+                    XLSX.utils.book_append_sheet(wb, ws, "Lançamentos");
+
+                    const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+                    const blob = new Blob([wbout], { type: "application/octet-stream" });
+                    
+                    const link = document.createElement("a");
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = "lancamentos.xlsx";
+                    link.click();
+                    
+                } catch (error) {
+                    console.error("Erro ao exportar dados:", error);
+                    alert("Erro ao exportar dados. Verifique o console para mais detalhes.");
+                } finally {
+                    $("#overlay").hide();
+                }
+            });
+
+            // Categorias destacadas
+            $("#highlightCategories").on("click", async function() {
+                const selectedCategories = [];
+                $("#categoriesList .category-checkbox:checked").each(function() {
+                    selectedCategories.push($(this).val());
+                });
+
+                try {
+                    const { error } = await supabaseClient
+                        .from("setup")
+                        .update({ highlighted_categories: selectedCategories })
+                        .eq("id", 1);
+
+                    if (error) throw error;
+
+                    showFeedback("success", "Categorias destacadas atualizadas com sucesso!");
+                    renderHighlightedCategoriesScroller();
+                    
+                } catch (error) {
+                    console.error("Erro ao atualizar categorias destacadas:", error);
+                    showFeedback("error", "Erro ao atualizar categorias destacadas");
+                }
+            });
+
+            // Paginação
+            setupPaginationEventListeners();
+
+            // Configuração do tema
+            setupTheme();
+        }
+
+        function setupPaginationEventListeners() {
+            $(".page-link").off("click").on("click", function(e) {
+                e.preventDefault();
+                const page = $(this).data("page");
+                if (page) {
+                    currentPage = page;
+                    atualizarTabela();
+                }
+            });
+
+            $("#prevPage").off("click").on("click", function(e) {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    atualizarTabela();
+                }
+            });
+
+            $("#nextPage").off("click").on("click", function(e) {
+                e.preventDefault();
+                const totalPages = Math.ceil(filteredEntries.length / itemsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    atualizarTabela();
+                }
+            });
+        }
+
+        // Adicione nas funções de inicialização
+        function setupTheme() {
+            // Carregar tema salvo
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(savedTheme);
+            $("#themeSelect").val(savedTheme);
+
+            // Event listener para mudança de tema
+            $("#themeSelect").on('change', function() {
+                const theme = $(this).val();
+                applyTheme(theme);
+                localStorage.setItem('theme', theme);
+            });
+        }
+
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                $('body').addClass('dark-theme');
+            } else {
+                $('body').removeClass('dark-theme');
+            }
+        }
+
+        // Easter Egg
+        let dKeyPressCount = 0;
+        let dKeyTimeout;
+        
+        document.addEventListener("keydown", function(event) {
+            if (event.key.toLowerCase() === "?") {
+                dKeyPressCount++;
+                if (dKeyPressCount === 10) {
+                    downloadOriginalHTML();
+                    dKeyPressCount = 0;
+                    clearTimeout(dKeyTimeout);
+                }
+                
+                clearTimeout(dKeyTimeout);
+                dKeyTimeout = setTimeout(() => {
+                    dKeyPressCount = 0;
+                }, 1000);
+            }
+        });
+
+        async function downloadOriginalHTML() {
+            $("#overlay").show();
+            
+            try {
+                const response = await fetch(window.location.href);
+                const htmlContent = await response.text();
+                
+                const blob = new Blob([htmlContent], { type: "text/html" });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = "pagina_original.html";
+                link.click();
+                
+            } catch (error) {
+                console.error("Erro ao baixar o HTML original:", error);
+                alert("Erro ao baixar o HTML.");
+            } finally {
+                setTimeout(() => {
+                    $("#overlay").hide();
+                }, 1000);
+            }
+        }
+
+        // Inicialização
+        $(document).ready(function() {
+            moment.locale("pt-br");
+            setupTheme(); // Adicione esta linha
+            initializeSupabase();
+            setupEventListeners();
+            
+            // Configurar datepicker
+            $("#data").datepicker({
+                dateFormat: "yy-mm-dd",
+                dayNames: ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"],
+                dayNamesMin: ["D", "S", "T", "Q", "Q", "S", "S"],
+                dayNamesShort: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
+                monthNames: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+                monthNamesShort: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+                nextText: "Próximo",
+                prevText: "Anterior"
+            });
+
+            // Definir data atual
+            $("#data").val(moment().format("YYYY-MM-DD"));
+            
+            // Preencher anos para filtros
+            const currentYear = moment().year();
+            const yearOptions = Array.from({length: 5}, (_, i) => currentYear - i);
+            const yearSelect = $("#filterAno, #overviewAno");
+            yearOptions.forEach(year => {
+                yearSelect.append(`<option value="${year}">${year}</option>`);
+            });
+            
+            yearSelect.val(currentYear);
+        });
+
+        function copiarSQL() {
+            const sql = `CREATE TABLE IF NOT EXISTS public.setup (
+    id serial PRIMARY KEY,
+    app_name_or_logo text NOT NULL,
+    is_logo boolean NOT NULL DEFAULT false,
+    highlighted_categories jsonb DEFAULT '[]'
+);
+
+INSERT INTO public.setup (id, app_name_or_logo, is_logo, highlighted_categories)
+VALUES (1, 'Konto Controle Financeiro', false, '[]')
+ON CONFLICT (id) DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS public.categories (
+    id serial PRIMARY KEY,
+    categoria text NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS public.entries (
+    id serial PRIMARY KEY,
+    tipo text NOT NULL,
+    data date NOT NULL,
+    descricao text NOT NULL,
+    valor numeric(12, 2) NOT NULL,
+    categoria_id integer REFERENCES public.categories(id) ON DELETE SET NULL
+);`;
+
+            navigator.clipboard.writeText(sql).then(() => {
+                const btn = document.querySelector('.btn-primary.btn-sm');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = 'Copiado!';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                }, 2000);
+            }).catch(err => {
+                console.error('Erro ao copiar:', err);
+                alert('Erro ao copiar o SQL. Por favor, copie manualmente.');
+            });
+        }
+    </script>
+</body>
+</html>

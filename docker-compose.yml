@@ -7,15 +7,18 @@ services:
     container_name: laravel_app
     volumes:
       - ./:/var/www/html
-      - /var/www/html/vendor
-      - /var/www/html/storage
+      - vendor:/var/www/html/vendor
+      - storage:/var/www/html/storage
     networks:
       - laravel
     healthcheck:
-      test: ["CMD", "php", "-v"]
+      test: ["CMD", "php", "artisan", "--version"]
       interval: 10s
       timeout: 5s
       retries: 3
+    environment:
+      - REDIS_HOST=redis
+      - PHP_IDE_CONFIG=serverName=Docker
 
   # Serviço do Nginx para servir o Laravel
   webserver:
@@ -38,8 +41,31 @@ services:
     container_name: laravel_redis
     ports:
       - "6379:6379"
+    volumes:
+      - redis_data:/data
     networks:
       - laravel
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    command: redis-server --appendonly yes
+    sysctls:
+      net.core.somaxconn: 1024
+
+  # Serviço Selenium
+  selenium:
+    image: selenium/standalone-chrome:latest
+    volumes:
+      - /dev/shm:/dev/shm
+    networks:
+      - laravel
+
+volumes:
+  vendor:
+  storage:
+  redis_data:
 
 networks:
   laravel:
