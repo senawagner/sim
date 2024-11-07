@@ -12,20 +12,26 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            //Filiais
+            FiliaisTableSeeder::class,
+
             // Primeiro as permissões e papéis
             PermissionsSeeder::class,
+
+            //Usuário arquiteto padrão
+            ArquitetoUserSeeder::class,
+
+            //Usuário administrador padrão
+            //AdminUserSeeder::class,
             
-            // Depois os dados básicos do sistema
-            FilialSeeder::class,
-            EquipamentoSeeder::class,
+            // Outros seeders especificos do sistema
+            //EquipamentoSeeder::class,
+            //ContratosPmocSeeder::class,
+            //CiclosManutencaoSeeder::class,
+            //ItensVerificacaoSeeder::class,
             
-            // Se houver um usuário admin padrão
-            AdminUserSeeder::class,
             
-            // Outros seeders específicos do sistema
-            ContratosPmocSeeder::class,
-            CiclosManutencaoSeeder::class,
-            ItensVerificacaoSeeder::class,
+            
         ]);
     }
 }

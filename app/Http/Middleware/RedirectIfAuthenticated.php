@@ -17,7 +17,7 @@ class RedirectIfAuthenticated
                 $user = Auth::user();
                 switch ($user->perfil) {
                     case 'administrador':
-                        return redirect()->route('admin.dashboard');
+                        return redirect()->route('administrador.dashboard');
                     case 'tecnico':
                         return redirect()->route('tecnico.dashboard');
                     case 'arquiteto':

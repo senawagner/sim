@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'SIM - Sistema Integrado de Manutenção') }}</title>
     
     <!-- Bootstrap CSS -->
@@ -36,6 +37,14 @@
                                 {{ Auth::user()->nome }}
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
+                                @if(Auth::user()->perfil === 'arquiteto')
+                                    <a class="dropdown-item" href="{{ route('arquiteto.fabricante.index') }}">Fabricantes</a>
+                                    <a class="dropdown-item" href="{{ route('arquiteto.capacidade.index') }}">Capacidades</a>
+                                    <a class="dropdown-item" href="{{ route('arquiteto.modelo.index') }}">Modelos</a>
+                                    <a class="dropdown-item" href="{{ route('arquiteto.localizacao.index') }}">Localizações</a>
+                                    <a class="dropdown-item" href="{{ route('arquiteto.setor.index') }}">Setores</a>
+                                    <div class="dropdown-divider"></div>
+                                @endif
                                 <form action="{{ route('logout') }}" method="POST">
                                     @csrf
                                     <button type="submit" class="dropdown-item">Sair</button>

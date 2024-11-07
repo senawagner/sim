@@ -10,70 +10,64 @@ class Equipamento extends Model
     use HasFactory;
 
     protected $table = 'equipamentos';
-    protected $primaryKey = 'equipamento_id';
-    public $timestamps = true;
-
-    const CREATED_AT = 'criado_em';
-    const UPDATED_AT = 'atualizado_em';
 
     protected $fillable = [
-        'fabricante',
-        'tipo',
-        'capacidade',
         'numero_patrimonio',
-        'modelo_evaporadora',
-        'modelo_condensadora',
-        'caracteristicas',
+        'tipo',
+        'fabricante_id',
+        'capacidade_id',
+        'modelo_evaporadora_id',
+        'modelo_condensadora_id',
         'filial_id',
-        'localizacao',
-        'andar',
-        'observacoes',
-    ];
-
-    protected $casts = [
-        'caracteristicas' => 'array',
-        'tipo' => 'string',
-        'criado_em' => 'datetime',
-        'atualizado_em' => 'datetime'
-    ];
-
-    // Adicionar constantes para os tipos permitidos
-    const TIPO_SPLIT = 'Split';
-    const TIPO_ACJ = 'ACJ';
-
-    // Adicionar constantes para as características permitidas
-    const CARACTERISTICAS = [
-        'High Wall',
-        'Piso Teto',
-        'Inverter',
-        'Frio',
-        'Frio/Quente',
-        '110.Mono',
-        '220/Mono',
-        '220/Trifasico',
-        '380/Trifasico'
+        'localizacao_id',
+        'setor_id',
+        'observacoes'
     ];
 
     // Relacionamentos
+    public function fabricante()
+    {
+        return $this->belongsTo(Fabricante::class);
+    }
+
+    public function capacidade()
+    {
+        return $this->belongsTo(Capacidade::class);
+    }
+
+    public function modeloEvaporadora()
+    {
+        return $this->belongsTo(Modelo::class, 'modelo_evaporadora_id');
+    }
+
+    public function modeloCondensadora()
+    {
+        return $this->belongsTo(Modelo::class, 'modelo_condensadora_id');
+    }
+
     public function filial()
     {
         return $this->belongsTo(Filial::class);
     }
 
-    public function manutencoes()
+    public function localizacao()
     {
-        return $this->hasMany(Manutencao::class, 'equipamento_id', 'equipamento_id');
+        return $this->belongsTo(Localizacao::class, 'localizacao_id');
     }
 
-    // Métodos
-    public function getDescricaoCompletaAttribute()
+    public function setor()
     {
-        return "{$this->tipo} - {$this->fabricante} - {$this->numero_patrimonio} ({$this->localizacao})";
+        return $this->belongsTo(Setor::class, 'setor_id');
     }
 
-    // Escopos
-    public function scopePorFilial($query, $filialId)
+    // Acessors
+    public function getLocalizacaoCompletaAttribute()
     {
-        return $query->where('filial_id', $filialId);
+        return "{$this->localizacao->nome} - {$this->setor->nome}";
+    }
+
+    public function getCapacidadeFormatadaAttribute()
+    {
+        return "{$this->capacidade->valor} BTUs";
     }
 }

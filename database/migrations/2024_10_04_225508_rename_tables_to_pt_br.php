@@ -1,28 +1,30 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RenameTablesToPtBr extends Migration
+return new class extends Migration
 {
     public function up()
     {
-        Schema::rename('users', 'usuarios');
-        Schema::rename('companies', 'empresas');
-        Schema::rename('branches', 'filiais');
-        Schema::rename('equipments', 'equipamentos');
-        Schema::rename('maintenances', 'manutencoes');
-        Schema::rename('technicians', 'tecnicos');
+        // Verifica se a tabela antiga existe e a nova não existe antes de renomear
+        if (Schema::hasTable('users') && !Schema::hasTable('usuarios')) {
+            Schema::rename('users', 'usuarios');
+        }
+        if (Schema::hasTable('companies') && !Schema::hasTable('empresas')) {
+            Schema::rename('companies', 'empresas');
+        }
+        // ... outras renomeações ...
     }
 
     public function down()
     {
-        Schema::rename('usuarios', 'users');
-        Schema::rename('empresas', 'companies');
-        Schema::rename('filiais', 'branches');
-        Schema::rename('equipamentos', 'equipments');
-        Schema::rename('manutencoes', 'maintenances');
-        Schema::rename('tecnicos', 'technicians');
+        if (Schema::hasTable('usuarios') && !Schema::hasTable('users')) {
+            Schema::rename('usuarios', 'users');
+        }
+        if (Schema::hasTable('empresas') && !Schema::hasTable('companies')) {
+            Schema::rename('empresas', 'companies');
+        }
+        // ... outras renomeações ...
     }
-}
+};

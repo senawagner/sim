@@ -1,48 +1,140 @@
-# Arquitetura do Sistema SIM (Integrated Maintenance Services)
+# Arquitetura do Sistema SIM (Sistema Integrado de Manutenção)
 
-## 1. Visão Geral
+######################## 1. Visão Geral ########################
 
-O sistema SIM é uma aplicação web baseada em Laravel projetada para o Gerenciamento de manutenções de equipamentos de refrigeração e AR-CONDICIONADO.
+O SIM é uma aplicação web empresarial desenvolvida em Laravel, focada no gerenciamento completo de manutenções de equipamentos de refrigeração e ar-condicionado. O sistema oferece uma solução integrada para:
 
-## 1.1. Ferramentas e Tecnologias Utilizadas
+- Gestão de manutenções preventivas e corretivas
+- Controle detalhado de equipamentos e suas especificações
+- Gerenciamento de filiais e setores
+- Sistema de notificações para manutenções programadas
+- Relatórios gerenciais e análises estatísticas
+- Controle de acesso baseado em perfis (Arquiteto, Administrador, Coordenador, Técnico)
+- Dashboard personalizado por perfil de usuário
+- Exportação de dados em múltiplos formatos
+- Monitoramento em tempo real do status das manutenções
 
-### Backend
-- PHP 8.1
-- Laravel 10.x
-- MySQL 8.0
-- Redis (Cache, Queue e Session)
-- Nginx
+######################## 1.1. Ferramentas e Tecnologias Utilizadas
 
-### Frontend
-- Alpine.js 3.x
-- TailwindCSS 3.x
-- Bootstrap 5.x
-- Font Awesome 5.15
-- DataTables 1.11
-- SweetAlert2 11.x
+Backend
+
+PHP 8.1
+PHP (Hypertext Preprocessor) é uma linguagem de script de código aberto amplamente utilizada para o desenvolvimento web. A versão 8.1 traz várias melhorias e novos recursos, incluindo:
+
+Fibers: Introduzidos para facilitar a programação assíncrona, proporcionando um melhor controle sobre o fluxo de execução.
+Enums: Permitem definir um conjunto de valores constantes e nomeados, facilitando a criação de código mais legível e menos propenso a erros.
+Performance Improvements: Melhorias significativas de desempenho em relação a versões anteriores.
+Readonly Properties: Permitem definir propriedades de classe que só podem ser escritas uma vez, aumentando a segurança do código.
+Laravel 10.x
+Laravel é um framework PHP popular que facilita o desenvolvimento de aplicações web robustas e escaláveis. A versão 10.x continua a tradição de fornecer uma arquitetura expressiva e elegante. Alguns de seus recursos principais incluem:
+
+Eloquent ORM: Um ORM (Object-Relational Mapping) que simplifica a interação com bancos de dados.
+Blade Templating Engine: Um motor de templates que permite criar layouts dinâmicos e reutilizáveis.
+Routing: Sistema de roteamento simples e flexível para definir URLs amigáveis.
+Middleware: Facilita a filtragem de requisições HTTP.
+Task Scheduling: Permite agendar tarefas periodicamente usando a sintaxe fluente do Laravel.
+MySQL 8.0
+MySQL é um dos sistemas de gerenciamento de banco de dados relacional mais populares do mundo. A versão 8.0 oferece várias melhorias em relação às versões anteriores, como:
+
+JSON Support: Suporte aprimorado para manipulação de dados JSON.
+Window Functions: Permitem realizar operações complexas em conjuntos de dados.
+CTEs (Common Table Expressions): Facilitam a criação de consultas complexas.
+Improved Security: Melhorias em segurança, incluindo autenticação baseada em plugin.
+Redis (Cache, Queue e Session)
+Redis é um armazenamento de estrutura de dados em memória, usado como banco de dados, cache e broker de mensagens. É conhecido por sua alta performance e flexibilidade. No contexto de backend, Redis é frequentemente utilizado para:
+
+Cache: Armazenamento temporário de dados para acelerar o acesso a informações frequentemente solicitadas.
+Queue: Gerenciamento de filas de tarefas para processamento assíncrono.
+Session Management: Armazenamento de sessões de usuário para melhorar a escalabilidade e a performance de aplicações web.
+Nginx
+Nginx é um servidor web de código aberto conhecido por sua alta performance, estabilidade e baixo consumo de recursos. Além de servir conteúdo estático, ele é frequentemente usado como:
+
+Reverse Proxy: Encaminhamento de requisições para servidores de aplicação.
+Load Balancer: Distribuição de carga entre múltiplos servidores para otimizar recursos e aumentar a disponibilidade.
+HTTP Cache: Armazenamento de respostas HTTP para melhorar a velocidade de entrega de conteúdo.
+
+
+
+Frontend
+Alpine.js 3.x:
+Alpine.js é uma biblioteca JavaScript leve para adicionar interatividade a páginas web. É uma alternativa mais simples e minimalista a frameworks maiores como Vue.js ou React. Alpine.js permite que você adicione comportamento dinâmico a seus elementos HTML usando atributos específicos, tornando-o ideal para projetos onde a simplicidade e a leveza são prioridades.
+TailwindCSS 3.x:
+TailwindCSS é um framework CSS utilitário que permite construir interfaces de usuário personalizadas sem sair do seu HTML. Ao contrário de frameworks CSS tradicionais que fornecem componentes pré-estilizados, Tailwind fornece classes utilitárias que podem ser combinadas para criar estilos personalizados de forma rápida e eficiente, promovendo um design consistente e responsivo.
+Bootstrap 5.x:
+Bootstrap é um dos frameworks CSS mais populares para desenvolvimento web responsivo e mobile-first. Ele fornece uma coleção de componentes CSS e JavaScript pré-estilizados, como botões, formulários, e barras de navegação, além de um sistema de grid flexível que facilita o layout de páginas web. A versão 5 trouxe melhorias como a remoção da dependência do jQuery e novos componentes.
+Font Awesome 5.15:
+Font Awesome é uma biblioteca de ícones amplamente utilizada que oferece uma vasta gama de ícones vetoriais escaláveis que podem ser facilmente personalizados com CSS. Esses ícones podem ser usados em sites e aplicações para melhorar a interface do usuário com gráficos atraentes e intuitivos.
+DataTables 1.11:
+DataTables é um plugin jQuery que adiciona funcionalidades avançadas a tabelas HTML, como paginação, busca, ordenação e filtragem. É especialmente útil para lidar com grandes conjuntos de dados e melhorar a usabilidade e a interatividade das tabelas em aplicações web.
+SweetAlert2 11.x:
+SweetAlert2 é uma biblioteca JavaScript para criar alertas e diálogos modais bonitos e personalizáveis. Ele substitui os alertas nativos do navegador com caixas de diálogo mais atraentes e interativas, que podem incluir botões, ícones, e animações, melhorando a experiência do usuário em aplicações web.
 
 ### Ambiente de Desenvolvimento
-- Docker & Docker Compose
-- Laravel Sail
-- Laravel Telescope (Debugging)
-- Predis (Cliente Redis para PHP)
+Docker
+Docker é uma plataforma que permite criar, implantar e executar aplicações em contêineres. Contêineres são ambientes isolados que incluem tudo o que uma aplicação precisa para funcionar, desde o sistema operacional até as bibliotecas e dependências. As principais vantagens do Docker incluem:
+
+Portabilidade: Contêineres podem ser executados em qualquer máquina que tenha o Docker instalado, independentemente do sistema operacional subjacente.
+Consistência: Garante que o software funcione da mesma forma em desenvolvimento, teste e produção.
+Eficiência: Contêineres compartilham o kernel do sistema operacional, tornando-os mais leves e rápidos do que máquinas virtuais tradicionais.
+Docker Compose
+Docker Compose é uma ferramenta para definir e executar aplicações multi-contêiner. Com um arquivo YAML, você pode configurar todos os serviços da sua aplicação, como bancos de dados, servidores web, etc. Suas características principais incluem:
+
+Facilidade de Uso: Simplifica a orquestração de múltiplos contêineres com comandos simples.
+Configuração Centralizada: Todas as configurações de serviço são definidas em um único arquivo, facilitando a manutenção e a replicação de ambientes.
+Escalabilidade: Permite escalar serviços facilmente com comandos de linha de comando.
+Laravel Sail
+Laravel Sail é um ambiente de desenvolvimento leve para Laravel que utiliza Docker. Ele fornece uma interface de linha de comando para interagir com o Docker, tornando mais fácil configurar um ambiente de desenvolvimento Laravel sem a necessidade de instalar diretamente serviços como PHP, MySQL, Redis, etc., no sistema operacional do desenvolvedor. Seus benefícios incluem:
+
+Configuração Simplificada: Configura automaticamente um ambiente de desenvolvimento Laravel com um único comando.
+Integração com Docker: Aproveita o poder do Docker para criar ambientes consistentes e isolados.
+Flexibilidade: Permite personalizar a configuração do ambiente conforme necessário.
+Laravel Telescope (Debugging)
+Laravel Telescope é uma ferramenta de depuração e monitoramento para aplicações Laravel. Ele proporciona uma visão detalhada sobre a execução da aplicação, permitindo aos desenvolvedores identificar e resolver problemas rapidamente. Funcionalidades principais incluem:
+
+Monitoramento de Requisições: Exibe informações detalhadas sobre cada requisição HTTP.
+Execução de Comandos Artisan: Registra e exibe todos os comandos Artisan executados.
+Consultas de Banco de Dados: Mostra todas as consultas SQL executadas, junto com o tempo de execução.
+Exceções e Erros: Captura e exibe exceções e erros ocorridos na aplicação.
+Jobs e Filas: Monitora a execução de jobs e filas, exibindo detalhes sobre cada tarefa.
+Predis (Cliente Redis para PHP)
+Predis é uma biblioteca PHP que fornece uma interface para interagir com o Redis, um banco de dados em memória amplamente utilizado para cache, filas e armazenamento de sessões. Predis é conhecido por sua simplicidade e flexibilidade, oferecendo:
+
+Compatibilidade: Suporte à maioria dos comandos do Redis, permitindo a execução de operações complexas.
+Conexões Persistentes e de Cluster: Suporte para conexões persistentes e configuração de clusters Redis.
+Fácil Integração: Integra-se facilmente com frameworks PHP, como Laravel, para gerenciar sessões, filas e cache.
+Extensibilidade: Permite a criação de comandos personalizados para estender a funcionalidade padrão do Redis.
 
 ### Ferramentas de Teste e Qualidade
-- PHPUnit
-- Laravel Telescope
-- Laravel Horizon
+PHPUnit
+PHPUnit é um framework de testes unitários para PHP. Ele é amplamente utilizado para garantir que o código funcione como esperado, ajudando a identificar e corrigir bugs antes que o software seja implantado. As principais características do PHPUnit incluem:
 
-## 1.2. Lógica do Sistema
+Testes Unitários: Permite a criação de testes que verificam o comportamento de unidades individuais de código, como funções e métodos.
+Assertions: Oferece uma ampla gama de asserções que permitem verificar se o código está produzindo os resultados esperados.
+Test Doubles: Suporte para mocks, stubs e outros tipos de objetos de teste que ajudam a isolar o código em testes.
+Relatórios de Cobertura de Código: Gera relatórios que mostram quais partes do código foram cobertas por testes, ajudando a identificar áreas que precisam de mais testes.
+Execução Automatizada: Integra-se facilmente com sistemas de integração contínua para executar testes automaticamente.
+Laravel Telescope
+Laravel Telescope é uma ferramenta de depuração e monitoramento para aplicações Laravel. Ele oferece uma visão abrangente sobre a atividade da aplicação, facilitando a identificação e resolução de problemas. Entre suas funcionalidades, destacam-se:
+
+Monitoramento de Requisições: Permite visualizar detalhes sobre cada requisição HTTP, incluindo cabeçalhos, tempo de execução e resposta.
+Consultas de Banco de Dados: Registra todas as consultas SQL executadas, junto com o tempo de execução, ajudando a identificar gargalos de desempenho.
+Exceções e Erros: Captura e exibe exceções e erros, facilitando a depuração.
+Eventos e Logs: Monitora eventos do sistema e logs de aplicação.
+Jobs e Filas: Exibe detalhes sobre a execução de jobs e filas, incluindo falhas e tempos de execução.
+Laravel Horizon
+Laravel Horizon é um painel de controle para gerenciar filas no Laravel. Ele fornece uma interface rica para monitorar, configurar e gerenciar filas de jobs que são processados em segundo plano. Seus principais recursos incluem:
+
+Dashboard em Tempo Real: Oferece uma visão em tempo real das filas, mostrando jobs ativos, concluídos e falhos.
+Configuração de Filas: Permite configurar filas e balancear a carga de trabalho entre diferentes workers.
+Monitoramento de Desempenho: Exibe estatísticas detalhadas sobre o tempo de execução de jobs, tempos de espera e outras métricas de desempenho.
+Alertas e Notificações: Configura alertas para situações como falhas de jobs ou tempos de execução excessivos.
+Suporte a Redis: Integra-se diretamente com Redis, aproveitando seu desempenho para gerenciar filas de forma eficiente.
 
 
 
 
-
+### 1.2. Lógica do Sistema
 Narrativa do fluxo do sistema:
-
-
-
-
 
 
 1. **Autenticação**: 
@@ -158,6 +250,20 @@ Narrativa do fluxo do sistema:
 13. **Kernel** (`app/Console/Kernel.php`)
     - Configura o agendamento para a geração automática de notificações de manutenção.
    - Define a frequência de execução do comando de geração de notificações.
+
+Existem dois arquivos Kernel.php no sistema, porém, cumprem papéis diferentes no Laravel:
+
+app/Http/Kernel.php:
+Gerencia middlewares HTTP
+Lida com requisições web
+Define middlewares globais, grupos e aliases
+Responsável pelo ciclo de vida das requisições HTTP
+
+app/Console/Kernel.php:
+Gerencia comandos do Artisan
+Lida com tarefas agendadas (scheduling)
+Define o agendamento de comandos
+Responsável por tarefas em background e CLI
 
 
 

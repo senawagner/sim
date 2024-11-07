@@ -7,22 +7,122 @@
         <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-primary sidebar">
             <div class="position-sticky pt-3">
                 <ul class="nav flex-column">
+                    <!-- Dashboard -->
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('arquiteto/dashboard') ? 'active' : '' }}" 
+                        <a class="nav-link text-white {{ Request::is('arquiteto/dashboard') ? 'bg-primary-dark' : '' }}" 
                            href="{{ route('arquiteto.dashboard') }}">
-                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                            <i class="fas fa-home me-2"></i> Dashboard
                         </a>
                     </li>
+
+                    <!-- Cadastros -->
+                    <li class="nav-item mt-3">
+                        <span class="text-white-50 px-3 text-uppercase small fw-bold">Cadastros</span>
+                    </li>
+                    
+                    <!-- Usuários -->
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('arquiteto/manutencoes*') ? 'active' : '' }}" 
+                        <a class="nav-link text-white {{ Request::is('arquiteto/usuarios*') ? 'bg-primary-dark' : '' }}" 
+                           href="{{ route('arquiteto.usuarios.index') }}">
+                            <i class="fas fa-users me-2"></i> Usuários
+                        </a>
+                    </li>
+
+                    <!-- Manutenções -->
+                    <li class="nav-item">
+                        <a class="nav-link text-white {{ Request::is('arquiteto/manutencoes*') ? 'bg-primary-dark' : '' }}" 
                            href="{{ route('arquiteto.manutencoes.index') }}">
-                            <i class="fas fa-tools"></i> Manutenções
+                            <i class="fas fa-wrench me-2"></i> Manutenções
                         </a>
                     </li>
+
+                    <!-- Filiais -->
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('arquiteto/equipamentos*') ? 'active' : '' }}" 
-                           href="{{ route('arquiteto.equipamentos.index') }}">
-                            <i class="fas fa-server"></i> Equipamentos
+                        <a class="nav-link text-white {{ Request::is('arquiteto/filiais*') ? 'bg-primary-dark' : '' }}" 
+                           href="{{ route('arquiteto.filiais.index') }}">
+                            <i class="fas fa-building me-2"></i> Filiais
+                        </a>
+                    </li>
+
+                    <!-- Equipamentos (Dropdown) -->
+                    <li class="nav-item">
+                        <a class="nav-link text-white d-flex justify-content-between align-items-center {{ 
+                            Request::is('arquiteto/equipamentos*') || 
+                            Request::is('arquiteto/fabricante*') || 
+                            Request::is('arquiteto/capacidade*') || 
+                            Request::is('arquiteto/modelo*') || 
+                            Request::is('arquiteto/localizacao*') || 
+                            Request::is('arquiteto/setor*') ? 'bg-primary-dark' : '' }}" 
+                           data-bs-toggle="collapse" 
+                           href="#equipamentosSubmenu" 
+                           role="button" 
+                           aria-expanded="{{ 
+                            Request::is('arquiteto/equipamentos*') || 
+                            Request::is('arquiteto/fabricante*') || 
+                            Request::is('arquiteto/capacidade*') || 
+                            Request::is('arquiteto/modelo*') || 
+                            Request::is('arquiteto/localizacao*') || 
+                            Request::is('arquiteto/setor*') ? 'true' : 'false' }}" 
+                           aria-controls="equipamentosSubmenu">
+                            <span>
+                                <i class="fas fa-cogs me-2"></i> Equipamentos
+                            </span>
+                            <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <div class="collapse {{ 
+                            Request::is('arquiteto/equipamentos*') || 
+                            Request::is('arquiteto/fabricante*') || 
+                            Request::is('arquiteto/capacidade*') || 
+                            Request::is('arquiteto/modelo*') || 
+                            Request::is('arquiteto/localizacao*') || 
+                            Request::is('arquiteto/setor*') ? 'show' : '' }}" 
+                             id="equipamentosSubmenu">
+                            <ul class="nav flex-column ms-3">
+                                <li class="nav-item">
+                                    <a class="nav-link text-white py-2 {{ Request::is('arquiteto/equipamentos*') ? 'bg-primary-dark' : '' }}" 
+                                       href="{{ route('arquiteto.equipamentos.index') }}">
+                                        <i class="fas fa-server me-2"></i> Listagem
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white py-2 {{ Request::is('arquiteto/fabricante*') ? 'bg-primary-dark' : '' }}" 
+                                       href="{{ route('arquiteto.fabricante.index') }}">
+                                        <i class="fas fa-industry me-2"></i> Fabricantes
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white py-2 {{ Request::is('arquiteto/capacidade*') ? 'bg-primary-dark' : '' }}" 
+                                       href="{{ route('arquiteto.capacidade.index') }}">
+                                        <i class="fas fa-temperature-high me-2"></i> Capacidades
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white py-2 {{ Request::is('arquiteto/modelo*') ? 'bg-primary-dark' : '' }}" 
+                                       href="{{ route('arquiteto.modelo.index') }}">
+                                        <i class="fas fa-box me-2"></i> Modelos
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white py-2 {{ Request::is('arquiteto/localizacao*') ? 'bg-primary-dark' : '' }}" 
+                                       href="{{ route('arquiteto.localizacao.index') }}">
+                                        <i class="fas fa-map-marker me-2"></i> Localizações
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white py-2 {{ Request::is('arquiteto/setor*') ? 'bg-primary-dark' : '' }}" 
+                                       href="{{ route('arquiteto.setor.index') }}">
+                                        <i class="fas fa-building me-2"></i> Setores
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <!-- Relatórios -->
+                    <li class="nav-item mt-3">
+                        <a class="nav-link text-white {{ Request::is('arquiteto/relatorios*') ? 'bg-primary-dark' : '' }}" 
+                           href="{{ route('arquiteto.relatorios.index') }}">
+                            <i class="fas fa-chart-bar me-2"></i> Relatórios
                         </a>
                     </li>
                 </ul>
@@ -32,7 +132,7 @@
         <!-- Main content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Dashboard do Arquiteto - Bem-vindo, {{ Auth::user()->nome }}</h1>
+                <h1 class="h2">Bem-vindo, {{ Auth::user()->nome_usuario }}</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
                     <div class="btn-group me-2">
                         <button type="button" class="btn btn-sm btn-outline-primary">
@@ -187,6 +287,10 @@
 
     .card:hover {
         transform: translateY(-5px);
+    }
+
+    .nav-divider {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 </style>
 @endpush

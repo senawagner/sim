@@ -13,29 +13,19 @@ class Usuario extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     protected $guard_name = 'web';
-
     protected $table = 'usuarios';
     protected $primaryKey = 'id';
-    public $timestamps = true;
-
-    const CREATED_AT = 'criado_em';
-    const UPDATED_AT = 'atualizado_em';
 
     protected $fillable = [
-        'nome',
+        'nome_usuario',
         'email',
         'perfil',
-        'senha',
-        'nome_usuario',
+        'password'
     ];
 
     protected $hidden = [
-        'senha',
-        'token_lembrete',
-    ];
-
-    protected $dates = [
-        'email_verificado_em',
+        'password',
+        'remember_token',
     ];
 
     // Relacionamentos
@@ -44,41 +34,7 @@ class Usuario extends Authenticatable
         return $this->hasMany(Manutencao::class);
     }
 
-    public function getAuthPassword()
-    {
-        return $this->senha;
-    }
-
-    public function getRememberTokenName()
-    {
-        return 'token_lembrete';
-    }
-
-    public function getAuthIdentifierName()
-    {
-        return 'nome_usuario';
-    }
-
-    public function getAuthIdentifier()
-    {
-        return $this->nome_usuario;
-    }
-
-    public function getPasswordAttribute()
-    {
-        return $this->senha;
-    }
-
-    /**
-     * Verifica se o usuário é um administrador.
-     *
-     * @return bool
-     */
-    public function isAdmin()
-    {
-        return $this->perfil === 'administrador';
-    }
-
+    // Métodos de verificação de perfil
     public function isArquiteto()
     {
         return $this->perfil === 'arquiteto';

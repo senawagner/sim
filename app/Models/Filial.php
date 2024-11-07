@@ -13,29 +13,23 @@ class Filial extends Model
     protected $primaryKey = 'id';
     public $timestamps = true;
 
-    const CREATED_AT = 'criado_em';
-    const UPDATED_AT = 'atualizado_em';
-
     protected $fillable = [
         'nome',
         'endereco',
         'cidade',
         'estado',
-        'cnpj',
-        'observacoes',
-        'dt_padrao',
+        'cep',
+        'telefone',
+        'data_preferencial'
     ];
 
     protected $dates = [
-        'dt_padrao',
+        'data_preferencial',
+        'created_at',
+        'updated_at'
     ];
 
     // Relacionamentos
-    public function empresa()
-    {
-        return $this->belongsTo(Empresa::class);
-    }
-
     public function equipamentos()
     {
         return $this->hasMany(Equipamento::class);

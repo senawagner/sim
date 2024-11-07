@@ -28,3 +28,19 @@ php artisan db:update-structure
 docker-compose exec app php artisan tinker
 
     >>> DB::connection()->getPdo();
+
+
+
+
+php artisan tinker
+    DB::select('DESCRIBE equipamentos');
+
+
+
+
+Para executar um Seeder
+    # Opção 1: Executar apenas o seeder especifico
+php artisan db:seed --class=FiliaisTableSeeder
+
+# Opção 2: Executar todos os seeders
+php artisan db:seed

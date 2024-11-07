@@ -159,294 +159,172 @@
   8. ✅ Implementar feedback visual após o registro bem-sucedido de uma manutenção.
   9. ✅ Testar a funcionalidade de registro de manutenções.
 
-## 13. Reestruturação do Dashboard do Administrador e Implementação de Funcionalidades Adicionais
+## 13. Implementação do Dashboard do Arquiteto
 - **Status**: 🔵 Em Andamento
-- **Descrição**: Redesenhar e implementar um novo dashboard administrativo focado em métricas e visão geral do sistema, além de implementar funcionalidades adicionais.
+- **Descrição**: Desenvolver completamente o dashboard e funcionalidades do perfil Arquiteto como modelo base para outros perfis.
 - **Tarefas**:
-  1. ✅ Remover campos de registro de manutenção do dashboard principal do administrador.
-  2. ✅ Criar componentes para exibição de métricas (Total de Usuários, Manutenções pendentes, Total de Equipamentos, etc.).
-  3. ✅ Implementar gráficos e visualizações de dados usando uma biblioteca como Chart.js.
-  4. ✅ Adicionar seção de relatórios rápidos.
-  5. ✅ Criar componente para exibição de ciclos de manutenção ativos.
-  6. ✅ Implementar layout responsivo similar ao modelo fornecido.
-  7. ✅ Integrar dados reais do sistema nas métricas e gráficos.
-  8. 🔵 Verificar menu Manutenções e suas funcionalidades:
-     - Listar manutenções
-     - Criar nova manutenção
-     - Editar manutenção existente
-     - Excluir manutenção
-     - Filtrar manutenções por status, data, equipamento, etc.
-  9. 🔵 Verificar menu Relatórios e suas funcionalidades:
-     - Relatório de manutenções por período
-     - Relatório de equipamentos por filial
-     - Relatório de desempenho de técnicos
-     - Exportação de relatórios em diferentes formatos (PDF, Excel)
-  10. 🔵 Implementar cadastro de usuários e suas funcionalidades:
-      - Listar usuários
-      - Criar novo usuário
-      - Editar usuário existente
-      - Desativar/reativar usuário
-      - Gerenciar permissões de usuário
-  11. 🔵 Criar os outros cadastros de acordo com as tabelas do banco de dados:
-      - Implementar CRUD para Filiais:
-        - Listar filiais
-        - Criar nova filial
-        - Editar filial existente
-        - Desativar/reativar filial
-      - Implementar CRUD para Equipamentos:
-        - Listar equipamentos
-        - Criar novo equipamento
-        - Editar equipamento existente
-        - Desativar/reativar equipamento
-      - Implementar CRUD para Empresas (se aplicável):
-        - Listar empresas
-        - Criar nova empresa
-        - Editar empresa existente
-        - Desativar/reativar empresa
-  12. 🔵 Implementar relacionamentos entre os modelos:
-      - Associar equipamentos a filiais
-      - Associar manutenções a equipamentos e técnicos
-      - Associar usuários a empresas ou filiais (se aplicável)
-  13. 🔵 Implementar validações e regras de negócio para todos os cadastros
-  14. 🔵 Criar testes automatizados para as novas funcionalidades
-  15. 🔵 Otimizar consultas ao banco de dados para melhorar a performance
-  16. 🔵 Implementar sistema de logs para ações importantes no sistema
+   1. ✅ Implementar layout base do dashboard do arquiteto
+   2. ✅ Criar componentes para exibição de métricas
+   3. ✅ Implementar gráficos usando Chart.js
+   4. ✅ Implementar layout responsivo
+   5. ✅ Integrar dados reais nas métricas e gráficos
+   6. 🔵 Implementar CRUD completo de Manutenções:
+      - ✅ Listar manutenções
+      - ✅ Criar nova manutenção
+      - ✅ Editar manutenção
+      - ✅ Excluir manutenção
+      - 🔵 Filtros e busca
+   7. 🔵 Implementar CRUD completo de Usuários:
+      - ✅ Listar usuários
+      - ✅ Criar novo usuário
+      - ✅ Editar usuário
+      - ✅ Excluir usuário
+      - 🔵 Filtros e busca
+   8. 🔵 Implementar CRUD completo de Equipamentos
+      - 🔵 Refatorar formulário de cadastro:
+        - Criar tabela e modelo para fabricantes
+        - Criar tabela e modelo para capacidades
+        - Criar tabela e modelo para modelos (evaporadora/condensadora)
+        - Criar tabela e modelo para localizações
+        - Criar tabela e modelo para setores
+      - Atualizar migrations e seeders
+      - Atualizar views com novos campos select
+      - Implementar validações específicas
+      - Testar integridade dos dados
+   9. 🔵 Implementar CRUD completo de Filiais
+   10. 🔵 Implementar Relatórios:
+       - Manutenções por período
+       - Equipamentos por filial
+       - Exportação (PDF, Excel)
+   11. 🔵 Implementar validações e regras de negócio
+   12. 🔵 Criar testes automatizados
+   13. 🔵 Otimizar queries e performance
+   14. 🔵 Implementar sistema de logs
 
-## 14. Implementação do Sistema de Permissões e Papéis
-- **Status**: ✅ Em Implementação
-- **Descrição**: Sistema dividido em duas fases: temporária e definitiva.
-
-### Fase 1 - Sistema Temporário (Durante Desenvolvimento)
-- **Status**: ✅ Implementado
+## 14. Replicação para Outros Perfis
+- **Status**: 🔴 Não Iniciado
+- **Descrição**: Replicar funcionalidades do perfil Arquiteto para outros perfis com suas respectivas limitações.
 - **Tarefas**:
-  1. ✅ Implementar middleware CheckUserRole com os seguintes perfis:
-     - Arquiteto (acesso total)
-     - Administrador
-     - Coordenador
-     - Técnico
-  2. ✅ Configurar verificação baseada no campo perfil
-  3. ✅ Atualizar rotas para usar novo middleware
-  4. ✅ Testar funcionalidades básicas de controle de acesso
+  1. Replicar para Administrador:
+     - Adaptar dashboard
+     - Limitar funcionalidades específicas
+  2. Replicar para Coordenador:
+     - Adaptar dashboard
+     - Implementar restrições de acesso
+  3. Replicar para Técnico:
+     - Simplificar interface
+     - Focar em registro de manutenções
 
-### Fase 2 - Sistema Definitivo (Pré-Produção)
-- **Status**: 🔴 Planejado
-- **Tarefas**:
-  1. Instalar e configurar spatie/laravel-permission
-  2. Migrar do sistema temporário para o Spatie
-  3. Implementar controle granular de permissões
-  4. Criar interface de gerenciamento de papéis
-  5. Realizar testes completos
-  6. Documentar novo sistema
-
-## 15. Implementação de Ciclos de Manutenção Automáticos
+## 15. Sistema de Notificações e Alertas
 - **Status**: 🔵 Em Andamento
-- **Descrição**: Desenvolver um sistema de ciclos de manutenção automáticos baseado nos contratos PMOC.
+- **Descrição**: Implementar primeiro no perfil Arquiteto, depois replicar para outros perfis.
 - **Tarefas**:
-  1. 🔵 Modelagem de Dados:
-     - ✅ Criar tabela para armazenar contratos PMOC (data início, data fim, cliente).
-     - ✅ Criar tabela para armazenar ciclos de manutenção (mensal, trimestral, semestral).
-     - ✅ Criar tabela para itens de verificação de cada ciclo.
-     - ✅ Atualizar modelo de Filial para incluir data preferencial de manutenção.
-  2. 🔵 Criação e Edição de Migrações:
-     - ✅ Criar migração `create_contratos_pmoc_table`
-     - ✅ Criar migração `create_ciclos_manutencao_table`
-     - ✅ Criar migração `create_itens_verificacao_table`
-     - ✅ Criar migração `add_data_preferencial_to_filiais_table`
-     - 🔵 Editar migração `create_contratos_pmoc_table`:
-       ```php
-       public function up()
-       {
-           Schema::create('contratos_pmoc', function (Blueprint $table) {
-               $table->id();
-               $table->foreignId('empresa_id')->constrained('empresas');
-               $table->date('data_inicio');
-               $table->date('data_fim');
-               $table->timestamps();
-           });
-       }
-       ```
-     - 🔴 Editar migração `create_ciclos_manutencao_table`
-     - 🔴 Editar migração `create_itens_verificacao_table`
-     - 🔴 Editar migração `add_data_preferencial_to_filiais_table`
-  3. 🔴 Lógica de Geração de Ciclos:
-     - Implementar função para gerar ciclos mensais automaticamente.
-     - Implementar função para gerar ciclos trimestrais automaticamente.
-     - Implementar função para gerar ciclos semestrais automaticamente.
-     - Criar job para executar a geração de ciclos periodicamente.
-  4. 🔴 Interface de Administração de Contratos:
-     - Criar interface para cadastro e gerenciamento de contratos PMOC.
-     - Implementar funcionalidade para iniciar ciclos manualmente, se necessário.
-  5. 🔴 Atualização da View de Manutenção:
-     - Adicionar cards para exibir status dos ciclos (Mensal, Trimestral, Semestral).
-     - Implementar lógica para exibir informações específicas de cada ciclo.
-     - Tornar campo de periodicidade não editável para ciclos automáticos.
-     - Adicionar campo para exibir técnico responsável (usuário logado).
-  6. 🔴 Implementação de Checklist de Manutenção:
-     - Criar interface de checklist para itens de verificação de cada ciclo.
-     - Implementar lógica de marcação de itens verificados.
-     - Desenvolver sistema de baixa automática de equipamentos ao completar checklist.
-     - Implementar lógica para concluir manutenção da filial quando todos equipamentos forem verificados.
-  7. 🔴 Sistema de Notificações:
-     - Implementar notificações para administradores sobre conclusão de manutenções.
-     - Criar alertas para manutenções próximas ou atrasadas.
-  8. 🔴 Relatórios e Dashboards:
-     - Atualizar dashboard do administrador para incluir visão geral dos ciclos de manutenção.
-     - Criar relatórios específicos para acompanhamento de ciclos de manutenção.
-  9. 🔴 Testes e Otimização:
-     - Desenvolver testes unitários e de integração para a nova funcionalidade.
-     - Realizar testes de carga para garantir performance com múltiplos contratos e ciclos.
-     - Otimizar queries e lógica de geração de ciclos conforme necessário.
-  10. 🔴 Documentação e Treinamento:
-     - Atualizar documentação do sistema para incluir novas funcionalidades.
-     - Criar guia de uso para administradores sobre gerenciamento de ciclos de manutenção.
-     - Preparar material de treinamento para técnicos sobre o novo processo de registro de manutenções.
-  11. 🔴 Implementação de Permissões:
-      - Atualizar sistema de permissões para controlar acesso às novas funcionalidades.
-      - Definir níveis de acesso para visualização e edição de ciclos de manutenção.
+  1. 🔵 Implementar no perfil Arquiteto:
+     - Sistema de notificações em tempo real
+     - Alertas de manutenções próximas
+     - Notificações de alterações em equipamentos
+     - Configurações de preferências de notificação
+  2. 🔴 Replicar para outros perfis conforme permissões:
+     - Administrador: todas as notificações
+     - Coordenador: notificações de sua filial
+     - Técnico: notificações de suas manutenções
 
-## 16. Reorganização da Navegação e Menu
-- **Status**: 🔴 Não Iniciado
-- **Descrição**: Reestruturar o menu de navegação para melhor organização das funcionalidades.
-- **Tarefas**:
-  1. Criar item de menu separado para "Manutenções".
-  2. Implementar submenu para Manutenções (Registrar, Listar, Editar).
-  3. Adicionar item de menu para "Equipamentos".
-  4. Criar páginas e rotas para gerenciamento de equipamentos.
-  5. Atualizar item de menu "Usuários" com submenu (Listar, Criar, Editar).
-  6. Implementar lógica de exibição de menu baseada no perfil do usuário.
-
-## 17. Implementação de Páginas Específicas
-- **Status**: 🔴 Não Iniciado
-- **Descrição**: Criar páginas dedicadas para cada funcionalidade principal.
-- **Tarefas**:
-  1. Criar página de listagem de manutenções.
-  2. Implementar página de registro de nova manutenção.
-  3. Desenvolver página de edição de manutenção existente.
-  4. Criar página de listagem de equipamentos.
-  5. Implementar página de cadastro/edição de equipamentos.
-  6. Desenvolver página de listagem de usuários.
-  7. Criar página de cadastro/edição de usuários.
-
-## 18. Implementação de Jobs e Filas
-- **Status**: 🔴 Não Iniciado
-- **Descrição**: Migrar tarefas pesadas para jobs em background.
-- **Tarefas**:
-  1. Identificar operações que podem se beneficiar de processamento em background.
-  2. Criar jobs Laravel para essas operações.
-  3. Configurar e testar sistema de filas.
-
-## 19. Configuração de Logging e Error Handling
-- **Status**: 🔴 Não Iniciado
-- **Descrição**: Migrar sistema de logging existente para o sistema de logging do Laravel.
-- **Tarefas**:
-  1. Configurar canais de log do Laravel.
-  2. Implementar error handling e reporting personalizado.
-  3. Integrar com serviços de monitoramento, se necessário.
-
-## 20. Testes e Qualidade de Código
-- **Status**: 🔴 Não Iniciado
-- **Descrição**: Implementar testes automatizados e ferramentas de qualidade de código.
-- **Tarefas**:
-  1. Escrever testes unitários para modelos e serviços.
-  2. Implementar testes de integração para fluxos principais.
-  3. Configurar ferramentas de análise estática de código (ex: Laravel Pint).
-
-## 21. Aprimoramento da Experiência do Usuário
-- **Status**: 🔴 Não Iniciado
-- **Descrição**: Melhorar a interface e experiência do usuário em todo o sistema.
-- **Tarefas**:
-  1. Implementar feedback visual para ações do usuário (toasts, alertas).
-  2. Adicionar animações sutis para transições entre páginas.
-  3. Melhorar a responsividade para dispositivos móveis.
-  4. Implementar temas claro/escuro (opcional).
-  5. Otimizar tempos de carregamento e performance geral.
-
-## 22. Implementação de Funcionalidades Avançadas
-- **Status**: 🔴 Não Iniciado
-- **Descrição**: Adicionar funcionalidades avançadas para melhorar a utilidade do sistema.
-- **Tarefas**:
-  1. Implementar sistema de busca avançada para manutenções e equipamentos.
-  2. Criar funcionalidade de exportação de dados (PDF, Excel).
-  3. Desenvolver sistema de alertas personalizáveis.
-  4. Implementar dashboard personalizado por usuário (widgets configuráveis).
-
-## 23. Testes e Otimização
-- **Status**: 🔴 Não Iniciado
-- **Descrição**: Realizar testes abrangentes e otimizar o desempenho do sistema.
-- **Tarefas**:
-  1. Executar testes de usabilidade com usuários reais.
-  2. Realizar testes de carga e estresse.
-  3. Otimizar consultas ao banco de dados.
-  4. Implementar cache onde apropriado.
-  5. Realizar auditoria de segurança.
-
-## 24. Documentação e Treinamento
-- **Status**: 🔴 Não Iniciado
-- **Descrição**: Preparar documentação e materiais de treinamento para usuários finais.
-- **Tarefas**:
-  1. Criar manual do usuário detalhado.
-  2. Desenvolver guias rápidos para funcionalidades principais.
-  3. Preparar material de treinamento para diferentes perfis de usuário.
-  4. Criar vídeos tutoriais para funcionalidades complexas.
-
-## 25. Lançamento e Monitoramento
-- **Status**: 🔴 Não Iniciado
-- **Descrição**: Preparar o sistema para lançamento e implementar monitoramento contínuo.
-- **Tarefas**:
-  1. Realizar migração final de dados.
-  2. Configurar ambiente de produção.
-  3. Implementar sistema de monitoramento e alertas.
-  4. Estabelecer processo de backup e recuperação.
-  5. Planejar e executar lançamento faseado.
-  6. Coletar e analisar feedback dos usuários pós-lançamento.
-
-Melhorias Programadas
+## 16. Melhorias na Interface do Usuário
 - **Status**: 🔵 Em Andamento
-- **Descrição**: Implementar melhorias adicionais para aprimorar a funcionalidade e a experiência do usuário.
+- **Descrição**: Aprimorar a experiência do usuário, começando pelo perfil Arquiteto.
 - **Tarefas**:
-  - ✅ Implementar validação de formulários no lado do cliente:
-    - ✅ Criar arquivo JavaScript para validação de formulários (`public/js/manutencao-form-validation.js`).
-    - ✅ Implementar lógica de validação para cada campo do formulário.
-    - ✅ Adicionar feedback visual para campos inválidos.
-    - ✅ Integrar validação do cliente com o formulário de manutenção.
-  - ✅ Melhorar e padronizar as mensagens flash:
-    - ✅ Criar componente Blade para exibição de mensagens flash (`resources/views/components/flash-messages.blade.php`).
-    - ✅ Atualizar o layout principal para incluir o novo componente.
-    - ✅ Modificar os controladores para usar mensagens flash consistentes.
-  - 🔵 Adicionar máscaras de entrada para campos específicos:
-    - ✅ Escolher e instalar uma biblioteca de máscaras de entrada (por exemplo, Inputmask).
-    - ✅ Criar arquivo JavaScript para aplicar máscaras (`public/js/input-masks.js`).
-    - 🔵 Implementar máscaras para campos relevantes (por exemplo, data, códigos de equipamento).
-    - 🔵 Integrar máscaras com o formulário de manutenção.
-  - 🔴 Otimizar a estrutura de arquivos JavaScript:
-    - Revisar e organizar os arquivos JavaScript existentes.
-    - Mover scripts de desenvolvimento para `resources/js/`.
-    - Configurar processo de compilação para gerar arquivos otimizados em `public/js/`.
-    - Atualizar referências nos templates Blade para usar os arquivos compilados.
-  - 🔵 Implementar funcionalidade de edição de manutenções:
-    - ✅ Criar rota para edição de manutenções.
-    - ✅ Implementar método de edição no ManutencaoController.
-    - ✅ Criar view para o formulário de edição de manutenção.
-    - 🔵 Implementar lógica de atualização no backend.
-    - 🔵 Adicionar validação para o formulário de edição.
-    - 🔵 Implementar feedback visual após edição bem-sucedida.
-  - 🔵 Melhorar a listagem de manutenções:
-    - ✅ Implementar paginação na listagem de manutenções.
-    - 🔵 Adicionar filtros para a listagem (por status, data, equipamento, etc.).
-    - 🔵 Implementar ordenação das colunas na listagem.
-    - 🔵 Adicionar busca rápida na listagem de manutenções.
-  - 🔴 Implementar sistema de permissões mais granular:
-    - Definir níveis de permissão para diferentes ações no sistema.
-    - Criar middleware para verificação de permissões.
-    - Atualizar controladores e views para respeitar as novas permissões.
-    - Criar interface de administração para gerenciar permissões de usuários.
+  1. 🔵 Perfil Arquiteto:
+     - Implementar tema claro/escuro
+     - Melhorar responsividade
+     - Adicionar animações e transições
+     - Otimizar carregamento de dados
+  2. 🔴 Replicar melhorias para outros perfis
 
+## 17. Sistema de Relatórios
+- **Status**: 🔴 Não Iniciado
+- **Descrição**: Desenvolver sistema completo de relatórios no perfil Arquiteto.
+- **Tarefas**:
+  1. Implementar geração de relatórios:
+     - Manutenções por período
+     - Equipamentos por filial
+     - Análise de custos
+     - Histórico de manutenções
+  2. Adicionar exportação em múltiplos formatos
+  3. Replicar para outros perfis com restrições apropriadas
 
+## 18. Otimização de Performance
+- **Status**: 🔴 Não Iniciado
+- **Descrição**: Otimizar performance começando pelo perfil Arquiteto.
+- **Tarefas**:
+  1. Otimizar queries do dashboard
+  2. Implementar cache estratégico
+  3. Lazy loading de componentes pesados
+  4. Otimizar carregamento de assets
+  5. Replicar otimizações para outros perfis
 
+## 19. Sistema de Logs e Auditoria
+- **Status**: 🔴 Não Iniciado
+- **Descrição**: Implementar sistema completo de logs no perfil Arquiteto.
+- **Tarefas**:
+  1. Registrar todas as ações importantes
+  2. Implementar visualização de logs
+  3. Criar sistema de auditoria
+  4. Replicar para outros perfis com níveis apropriados de acesso
 
+## 20. Testes Automatizados
+- **Status**: 🔴 Não Iniciado
+- **Descrição**: Desenvolver suite completa de testes começando pelo perfil Arquiteto.
+- **Tarefas**:
+  1. Testes unitários
+  2. Testes de integração
+  3. Testes de interface
+  4. Testes de performance
+  5. Adaptar testes para outros perfis
 
-    Middleware CheckUserRole com os seguintes perfis:
-     - Arquiteto (acesso total)
-     - Administrador
-     - Coordenador
-     - Tecnico
+## 21. Documentação
+- **Status**: 🔴 Não Iniciado
+- **Descrição**: Criar documentação completa começando pelo perfil Arquiteto.
+- **Tarefas**:
+  1. Documentação técnica
+  2. Manual do usuário
+  3. Guias de uso
+  4. Vídeos tutoriais
+  5. Adaptar documentação para outros perfis
+
+## 22. Deploy e Monitoramento
+- **Status**: 🔴 Não Iniciado
+- **Descrição**: Preparar ambiente de produção e monitoramento.
+- **Tarefas**:
+  1. Configurar ambiente de produção
+  2. Implementar CI/CD
+  3. Configurar monitoramento
+  4. Implementar backups automáticos
+  5. Planejar escalabilidade
+
+## 23. Treinamento e Suporte
+- **Status**: 🔴 Não Iniciado
+- **Descrição**: Preparar material de treinamento e suporte.
+- **Tarefas**:
+  1. Criar material de treinamento para cada perfil
+  2. Realizar treinamentos
+  3. Estabelecer canal de suporte
+  4. Criar base de conhecimento
+
+## 24. Lançamento Faseado
+- **Status**: 🔴 Não Iniciado
+- **Descrição**: Implementar lançamento gradual do sistema.
+- **Tarefas**:
+  1. Lançamento para Arquitetos
+  2. Avaliação e ajustes
+  3. Lançamento para Administradores
+  4. Lançamento para Coordenadores
+  5. Lançamento para Técnicos
+
+## 25. Melhorias Contínuas
+- **Status**: 🔴 Não Iniciado
+- **Descrição**: Planejar e implementar melhorias baseadas no feedback.
+- **Tarefas**:
+  1. Coletar feedback dos usuários
+  2. Analisar métricas de uso
+  3. Implementar melhorias prioritárias
+  4. Manter documentação atualizada
